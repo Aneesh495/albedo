@@ -1,0 +1,11 @@
+# Build and runtime artifacts
+build/
+bin/jconsole
+bin/*.dylib
+*.pyc
+__pycache__/
+.DS_Store
+*.swp
+*.tmp
+/tmp/
+.pytest_cache/

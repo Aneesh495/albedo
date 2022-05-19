@@ -1,0 +1,3 @@
+*.ijs linguist-detectable=true
+*.ijs linguist-language=J
+vendor/* linguist-vendored
