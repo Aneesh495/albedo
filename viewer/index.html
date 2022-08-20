@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Albedo - Hyperspectral Imaging & Satellite Spectroscopy Explorer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <span class="icon">🛰️</span>
+      <h1>ALBEDO</h1>
+      <span class="subtitle">High-Dimensional Hyperspectral Imaging & Spectroscopy Engine</span>
+    </div>
+    <div class="header-stats">
+      <span class="badge">Engine: J904 Architecture</span>
+      <span class="badge">Channels: 224 Contiguous (400 - 2500 nm)</span>
+      <span class="badge active">Pipeline: Online</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Column: Controls & Pipeline State -->
+    <aside class="sidebar">
+      <section class="card">
+        <h2>Composite Display Mode</h2>
+        <div class="control-group">
+          <label for="compositeSelect">RGB Band Combination</label>
+          <select id="compositeSelect">
+            <option value="true_color">Natural True Color (650, 550, 470 nm)</option>
+            <option value="cir" selected>Color Infrared CIR (850, 650, 550 nm)</option>
+            <option value="swir_geology">SWIR Mineral Geology (2200, 1600, 850 nm)</option>
+            <option value="agriculture">Agriculture / Moisture (1600, 850, 650 nm)</option>
+            <option value="single_band">Single Spectral Channel</option>
+          </select>
+        </div>
+
+        <div class="control-group" id="bandSliderGroup" style="display: none;">
+          <label for="bandSlider">Band Center: <span id="bandWvlLabel">550 nm</span> (Band <span id="bandIdxLabel">15</span>)</label>
+          <input type="range" id="bandSlider" min="0" max="223" value="15">
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Analysis Overlays</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="chkPlume" checked> Methane (CH4) Plume Anomaly Detection</label>
+          <label><input type="checkbox" id="chkEndmembers"> FCLS Abundance Heatmap</label>
+          <label><input type="checkbox" id="chkGrid"> Spatial Grid & Ground Coordinates</label>
+        </div>
+
+        <div class="control-group" id="endmemberSelectGroup" style="display: none;">
+          <label for="endmemberSelect">Active Abundance Layer</label>
+          <select id="endmemberSelect">
+            <option value="0">Endmember 0: Green Vegetation</option>
+            <option value="1">Endmember 1: Clear Water Channel</option>
+            <option value="2">Endmember 2: Kaolinite Soil</option>
+            <option value="3">Endmember 3: Calcite Formation</option>
+            <option value="4">Endmember 4: Urban Asphalt</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Pipeline Statistics</h2>
+        <div class="stat-row"><span>Intrinsic Dimension (HySime k):</span><strong>5 Endmembers</strong></div>
+        <div class="stat-row"><span>Unmixing Algorithm:</span><strong>Active-Set FCLS</strong></div>
+        <div class="stat-row"><span>Atmospheric Model:</span><strong>DOS-1 & QUAC</strong></div>
+        <div class="stat-row"><span>Target Detector:</span><strong>CEM & ACE Filter</strong></div>
+        <div class="stat-row"><span>Reconstruction RMSE:</span><strong>0.0182</strong></div>
+      </section>
+    </aside>
+
+    <!-- Center Column: Canvas & Overlays -->
+    <section class="viewport">
+      <div class="canvas-container">
+        <canvas id="hyperspectralCanvas" width="512" height="512"></canvas>
+        <div id="crosshair"></div>
+        <div id="targetBadge" class="target-badge">Methane Anomaly: Lat 34.1209, Lon -118.4512</div>
+      </div>
+      <div class="viewport-footer">
+        <span>Cursor: (<span id="coordX">0</span>, <span id="coordY">0</span>)</span>
+        <span>Selected Pixel Class: <strong id="pixelClassLabel">Green Vegetation</strong></span>
+        <span>Click anywhere on canvas to inspect spectral signature.</span>
+      </div>
+    </section>
+
+    <!-- Right Column: Spectral Probe Chart & Diagnostics -->
+    <aside class="right-panel">
+      <section class="card chart-card">
+        <h2>Spectral Reflectance Signature &rho;(&lambda;)</h2>
+        <div class="chart-container">
+          <canvas id="spectrumChart" width="450" height="260"></canvas>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="dot" style="background: #00e5ff;"></span> Probed Pixel</span>
+          <span class="legend-item"><span class="dot" style="background: #76ff03;"></span> Endmember Reference</span>
+          <span class="legend-item"><span class="dot" style="background: #ff1744;"></span> Methane Trough</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Biochemical & Mineral Indices</h2>
+        <div class="indices-grid">
+          <div class="index-cell"><span class="idx-name">NDVI</span><span class="idx-val" id="valNdvi">0.82</span></div>
+          <div class="index-cell"><span class="idx-name">NDRE</span><span class="idx-val" id="valNdre">0.51</span></div>
+          <div class="index-cell"><span class="idx-name">NDWI</span><span class="idx-val" id="valNdwi">-0.42</span></div>
+          <div class="index-cell"><span class="idx-name">Clay Idx</span><span class="idx-val" id="valClay">1.12</span></div>
+          <div class="index-cell"><span class="idx-name">EVI</span><span class="idx-val" id="valEvi">0.68</span></div>
+          <div class="index-cell"><span class="idx-name">CEM Hit</span><span class="idx-val" id="valCem">0.02</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Absorption Continuum Removal</h2>
+        <div class="continuum-metrics">
+          <div class="stat-row"><span>Absorption Center:</span><strong id="contCenter">2205 nm</strong></div>
+          <div class="stat-row"><span>Band Depth:</span><strong id="contDepth">0.42</strong></div>
+          <div class="stat-row"><span>Full Width (FWHD):</span><strong id="contFwhd">28 nm</strong></div>
+          <div class="stat-row"><span>Integrated Area:</span><strong id="contArea">11.8 nm</strong></div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
