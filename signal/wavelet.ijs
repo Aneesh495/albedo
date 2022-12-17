@@ -5,7 +5,7 @@ NB. Implements Haar and Daubechies-4 (db4) Mallat filter banks, multi-level pyra
 NB. decomposition, universal VisuShrink thresholding, and 2D spatial subband analysis.
 NB. ==============================================================================
 
-cocurrent 'albedo_wavelet'
+cocurrent 'base'
 
 NB. Filter coefficients
 NB. Haar filter bank
@@ -38,7 +38,7 @@ idwt1_haar_step =: 3 : 0
   evens =. (approx + detail) % SQRT2
   odds  =. (approx - detail) % SQRT2
   NB. Interleave evens and odds
-  , (evens ,: odds)
+  , |: (evens ,: odds)
 )
 
 NB. Circular periodic convolution with step downsampling
@@ -110,7 +110,7 @@ idwt1_multilevel =: 3 : 0
   levels =. <: # y
   cur =. > 0 { y
   for_l. i. levels do.
-    d =. > (1 + l) { y
+    d =. > (levels - l) { y
     cur =. idwt1_haar_step (cur ; d)
   end.
   cur
@@ -178,3 +178,16 @@ idwt2_haar =: 3 : 0
   NB. Reconstruct rows
   idwt1_haar_step"1 row_a ,: row_d
 )
+
+
+NB. Exported Aliases
+albedo_wavelet_dwt1_haar_step =: dwt1_haar_step
+albedo_wavelet_idwt1_haar_step =: idwt1_haar_step
+albedo_wavelet_dwt1_multilevel =: dwt1_multilevel
+albedo_wavelet_idwt1_multilevel =: idwt1_multilevel
+albedo_wavelet_soft_threshold =: soft_threshold
+albedo_wavelet_hard_threshold =: hard_threshold
+albedo_wavelet_visushrink_threshold =: visushrink_threshold
+albedo_wavelet_wavelet_denoise_1d =: wavelet_denoise_1d
+albedo_wavelet_dwt2_haar =: dwt2_haar
+albedo_wavelet_idwt2_haar =: idwt2_haar

@@ -5,7 +5,7 @@ NB. Strips random noise, spatial striping artifacts, and sensor readout defects
 NB. from 3D hyperspectral data cubes using low-rank Tucker and CP approximations.
 NB. ==============================================================================
 
-cocurrent 'albedo_denoise'
+cocurrent 'base'
 
 load 'tensor/tucker.ijs'
 load 'tensor/cp_als.ijs'
@@ -41,3 +41,6 @@ denoise_cp=: 4 : 0
   cp_model=. (rank_R; 15; 1e_4) albedo_cp_als_fit_cp_als cube
   albedo_cp_als_reconstruct_cp cp_model
 )
+
+
+albedo_denoise_denoise_tucker =: denoise_tucker

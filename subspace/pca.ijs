@@ -6,7 +6,7 @@ NB. explained variance ratios, forward subspace projection, and inverse
 NB. low-rank reconstruction.
 NB. ==============================================================================
 
-cocurrent 'albedo_pca'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -46,7 +46,7 @@ project_pca=: 4 : 0
   assert. k <: # evals [ 'k exceeds total number of components'
 
   NB. Select top k eigenvectors (columns)
-  Vk=. k {"1 evecs
+  Vk=. (i. k) {"1 evecs
 
   NB. Center data: Xc = X - mu
   Xc=. X - mu
@@ -61,7 +61,7 @@ reconstruct_pca=: 4 : 0
   'k model'=. x
   Y=. y
   'mu evals evecs var_ratio cum_var'=. model
-  Vk=. k {"1 evecs
+  Vk=. (i. k) {"1 evecs
 
   NB. Reconstruct: X_hat = Vk Y + mu
   (Vk albedo_linalg_matmul Y) + mu
@@ -85,3 +85,9 @@ select_k_components=: 4 : 0
   cum_var=. 4 {:: model
   1 + (+/ cum_var < target_var) <. (<: # cum_var)
 )
+
+
+albedo_pca_train_pca =: train_pca
+albedo_pca_project_pca =: project_pca
+albedo_pca_reconstruct_pca =: reconstruct_pca
+albedo_pca_reconstruction_mse =: reconstruction_mse

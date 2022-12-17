@@ -25,9 +25,9 @@ A=: 2 2 $ 1 2 3 4
 B=: 2 2 $ 0 5 6 7
 K=: A albedo_tensor_kronecker B
 'Kronecker shape should be 4 4' assert_shape K; 4 4
-'Kronecker entry (0,1) should be 5' assert_equal (K < 0 1); 5
-'Kronecker entry (2,2) should be 0' assert_equal (K < 2 2); 0
-'Kronecker entry (3,3) should be 28' assert_equal (K < 3 3); 28
+'Kronecker entry (0,1) should be 5' assert_equal (((< 0 1) { K)); 5
+'Kronecker entry (2,2) should be 0' assert_equal (((< 2 2) { K)); 0
+'Kronecker entry (3,3) should be 28' assert_equal (((< 3 3) { K)); 28
 
 NB. Test 4: Khatri-Rao product
 A_kr=: 2 2 $ 1 2 3 4

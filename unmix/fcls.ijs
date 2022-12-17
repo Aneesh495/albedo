@@ -8,7 +8,7 @@ NB.   2. Abundance Sum-to-One Constraint (ASC): sum(s_i) = 1
 NB. Implements Heinz & Chang (IEEE TGRS, 2001) augmented active-set solver.
 NB. ==============================================================================
 
-cocurrent 'albedo_fcls'
+cocurrent 'base'
 
 load 'unmix/nnls.ijs'
 load 'core/linalg.ijs'
@@ -60,7 +60,7 @@ unmix_cube=: 4 : 0
 
   for_h. i. H do.
     for_w. i. W do.
-      pixel=. cube <a:; h; w
+      pixel=. (<a:; h; w) { cube
       s_pixel=. M solve_fcls pixel
       abundances=. s_pixel (<a:; h; w)} abundances
     end.
@@ -77,10 +77,15 @@ unmix_rmse=: 4 : 0
   'p HA WA'=. $ A
 
   NB. Reconstruct cube: X_hat = M A
-  X_mat=. (B, H * W) $ cube
-  A_mat=. (p, H * W) $ A
+  X_mat=. (B, H * W) $ , cube
+  A_mat=. (p, H * W) $ , A
   X_hat=. M albedo_linalg_matmul A_mat
 
   diff=. X_mat - X_hat
   %:(+/ , *: diff) % (B * H * W)
 )
+
+
+albedo_fcls_solve_fcls =: solve_fcls
+albedo_fcls_unmix_cube =: unmix_cube
+albedo_fcls_unmix_rmse =: unmix_rmse

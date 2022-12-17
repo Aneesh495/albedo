@@ -38,7 +38,7 @@ X =: clutter
 X =: ((17 { X) + 2.0 * target_vec) (< 17) } X
 
 NB. Run AMSD detector
-scores =: (T ; B) amsd_detector_albedo_amsd_ X
+scores =: (T ; B) albedo_amsd_amsd_detector X
 assert n = # scores
 
 NB. Target pixel 17 must yield the maximum detection response

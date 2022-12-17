@@ -12,7 +12,7 @@ NB. Simulates atmospheric solar radiative transfer (solar irradiance, path radia
 NB. and sensor Gaussian noise).
 NB. ==============================================================================
 
-cocurrent 'albedo_sim'
+cocurrent 'base'
 
 load 'io/spectral_lib.ijs'
 load 'io/cube.ijs'
@@ -87,7 +87,7 @@ generate_scene=: 3 : 0
   plume_w=. <. 0.25 * W
   for_dh. 0 1 do.
     for_dw. 0 1 do.
-      orig_spec=. Refl_cube <a:; (plume_h + dh); (plume_w + dw)
+      orig_spec=. (<a:; (plume_h + dh); (plume_w + dw)) { Refl_cube
       NB. Plume transmission: 85% background + 15% methane gas absorption
       gas_spec=. (0.85 * orig_spec) + (0.15 * sig_methane)
       Refl_cube=. gas_spec (<a:; (plume_h + dh); (plume_w + dw))} Refl_cube
@@ -118,3 +118,6 @@ generate_scene=: 3 : 0
   NB. Returns (Rad_cube; Refl_noisy; A_gt; M; wvl; (plume_h, plume_w))
   Rad_cube; Refl_noisy; A_gt; M; wvl; (plume_h, plume_w)
 )
+
+
+albedo_sim_generate_scene =: generate_scene

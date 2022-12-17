@@ -9,7 +9,7 @@ NB.   4. Fully Constrained Least Squares (FCLS) abundance inversion.
 NB.   5. Quality assessment (reconstruction RMSE and unmixing diagnostics).
 NB. ==============================================================================
 
-cocurrent 'albedo_pipeline_unmix'
+cocurrent 'base'
 
 load 'atmos/dos.ijs'
 load 'subspace/hysime.ijs'
@@ -48,3 +48,6 @@ run_unmixing_pipeline=: 4 : 0
   NB. Returns pipeline result bundle
   boa_cube; M_est; abundances; dim_k; rmse
 )
+
+
+albedo_pipeline_unmix_run_unmixing_pipeline =: run_unmixing_pipeline

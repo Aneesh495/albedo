@@ -5,7 +5,7 @@ NB. Implements ENVI (.hdr) metadata parser and serializer, format validation,
 NB. and interleave transformations between BSQ, BIL, and BIP storage layouts.
 NB. ==============================================================================
 
-cocurrent 'albedo_envi'
+cocurrent 'base'
 
 NB. ------------------------------------------------------------------------------
 NB. Interleave Transformations
@@ -38,7 +38,14 @@ NB. ENVI Header Parsing
 NB. ------------------------------------------------------------------------------
 
 NB. Helper to trim leading/trailing whitespace
-trim=: #~ [: (*./\.) ' '&~: *. [: (*./\) ' '&~:
+trim=: 3 : 0
+  s=. y
+  m=. -. s e. ' ', (9 10 13 { a.)
+  if. 0 = +/ m do. '' return. end.
+  first=. m i. 1
+  last=. (#s) - (|. m) i. 1
+  first }. last {. s
+)
 
 NB. Parse a single key-value line from ENVI header text
 NB. e.g. "samples = 512" -> ('samples'; '512')
@@ -114,12 +121,29 @@ parse_envi_header=: 3 : 0
   keys ,: vals
 )
 
+NB. Helper to convert string to lowercase
+tolower=: 3 : 0
+  c=. y
+  uc=. (65 + i. 26) { a.
+  lc=. (97 + i. 26) { a.
+  idx=. uc i. c
+  mask=. idx < 26
+  res=. c
+  if. +/ mask do.
+    pos=. I. mask
+    res=. ((pos { idx) { lc) pos } res
+  end.
+  res
+)
+
 NB. Lookup value in parsed header dictionary table
 NB. Dyadic: key get_header_field header_dict
 get_header_field=: 4 : 0
-  k_query=. x
-  'keys vals'=. y
-  idx=. (tolower each keys) i. < tolower k_query
+  k_query=. tolower x
+  keys=. 0 { y
+  vals=. 1 { y
+  low_keys=. tolower each keys
+  idx=. low_keys i. < k_query
   if. idx < # keys do.
     > idx { vals
   else.
@@ -134,9 +158,13 @@ NB. ----------------------------------------------------------------------------
 NB. Format numeric list into ENVI bracketed string
 format_num_list=: 3 : 0
   nums=. y
-  str=. ;:^:_1 ": each nums
-  str=. ', ' (I. str = ' ')} str
-  '{', str, '}'
+  if. 0 = # nums do. '{}' return. end.
+  strs=. ": each nums
+  res=. > 0 { strs
+  for_idx. 1 }. i. # strs do.
+    res=. res, ', ', > idx { strs
+  end.
+  '{', res, '}'
 )
 
 NB. Generate ENVI header string from metadata fields:
@@ -164,3 +192,13 @@ generate_envi_header=: 3 : 0
   end.
   out
 )
+
+
+albedo_envi_parse_envi_header =: parse_envi_header
+albedo_envi_generate_envi_header =: generate_envi_header
+albedo_envi_get_header_field =: get_header_field
+albedo_envi_parse_num_list =: parse_num_list
+albedo_envi_bsq_to_bil =: bsq_to_bil
+albedo_envi_bil_to_bsq =: bil_to_bsq
+albedo_envi_bsq_to_bip =: bsq_to_bip
+albedo_envi_bip_to_bsq =: bip_to_bsq

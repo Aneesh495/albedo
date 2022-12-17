@@ -9,7 +9,7 @@ NB.   4. Constant False Alarm Rate (CFAR) adaptive thresholding.
 NB.   5. Extraction of pixel coordinates for verified target detections.
 NB. ==============================================================================
 
-cocurrent 'albedo_pipeline_detect'
+cocurrent 'base'
 
 load 'detect/rx.ijs'
 load 'detect/local_rx.ijs'
@@ -48,3 +48,6 @@ run_detection_pipeline=: 4 : 0
   NB. Returns: (cem_map; ace_map; rx_map; thresh_mask; det_coords)
   cem_map; ace_map; rx_map; thresh_mask; det_coords
 )
+
+
+albedo_pipeline_detect_run_detection_pipeline =: run_detection_pipeline

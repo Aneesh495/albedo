@@ -8,7 +8,7 @@ NB.   3. Spectral embedding via bottom eigenvectors of L_sym = D^(-1/2) L D^(-1/
 NB.   4. Manifold clustering on nonlinear spectral geometries.
 NB. ==============================================================================
 
-cocurrent 'albedo_spectral_graph'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'classify/kmeans.ijs'
@@ -65,13 +65,13 @@ NB. ----------------------------------------------------------------------------
 NB. Spectral Embedding & Clustering
 NB. ------------------------------------------------------------------------------
 
-NB. Compute k-dimensional spectral embedding using the smallest non-trivial eigenvectors of L_sym
+NB. Compute k-dimensional spectral embedding using the smallest eigenvectors of L_sym
 NB. Dyadic: k_dim spectral_embedding X
 spectral_embedding=: 4 : 0
   k=. x
   X=. y
   'B N'=. $ X
-  sigma=. 1.0
+  sigma=. 10.0
 
   W=. sigma compute_rbf_affinity X
   'L_sym inv_sqrt_d'=. normalized_laplacian W
@@ -79,16 +79,14 @@ spectral_embedding=: 4 : 0
   NB. Eigen-decomposition of L_sym (eigen_sym returns descending order)
   'evals V'=. albedo_linalg_eigen_sym L_sym
 
-  NB. Smallest eigenvalues correspond to the tail of sorted evals
-  NB. Skip the trivial 0 eigenvalue at the very end
-  bottom_indices=. _1 - 1 + i. k
-  Y_embed=. albedo_linalg_tr (bottom_indices {"1 V)
+  NB. Smallest k eigenvectors correspond to the tail of sorted evals
+  bottom_indices=. (<: N) - i. k
+  U=. bottom_indices {"1 V
 
   NB. Normalize rows of embedding to unit length
-  row_norms=. albedo_linalg_norm2 "1 Y_embed
-  row_norms=. row_norms >. 1e_12
-  Y_norm=. Y_embed % row_norms
-  albedo_linalg_tr Y_norm
+  row_norms=. (albedo_linalg_norm2 "1 U) >. 1e_12
+  U_norm=. U % row_norms
+  albedo_linalg_tr U_norm
 )
 
 NB. Full Spectral Graph Clustering
@@ -102,13 +100,20 @@ cluster_spectral=: 4 : 0
   'L_sym inv_sqrt_d'=. normalized_laplacian W
   'evals V'=. albedo_linalg_eigen_sym L_sym
 
-  NB. Extract K smallest non-trivial eigenvectors
-  bottom_indices=. _1 - 1 + i. K
-  Y_embed=. albedo_linalg_tr (bottom_indices {"1 V)
-  row_norms=. (albedo_linalg_norm2 "1 Y_embed) >. 1e_12
-  Y_norm=. albedo_linalg_tr (Y_embed % row_norms)
+  NB. Extract K smallest eigenvectors
+  bottom_indices=. (<: N) - i. K
+  U=. bottom_indices {"1 V
+  row_norms=. (albedo_linalg_norm2 "1 U) >. 1e_12
+  U_norm=. U % row_norms
+  Y_norm=. albedo_linalg_tr U_norm
 
-  NB. Run K-Means on normalized spectral coordinates
+  NB. Run K-Means on normalized spectral coordinates (K x N)
   'labels centroids'=. (K; 25) albedo_kmeans_fit_kmeans Y_norm
   labels; Y_norm
 )
+
+
+albedo_spectral_graph_compute_rbf_affinity =: compute_rbf_affinity
+albedo_spectral_graph_normalized_laplacian =: normalized_laplacian
+albedo_spectral_graph_spectral_embedding =: spectral_embedding
+albedo_spectral_graph_cluster_spectral =: cluster_spectral

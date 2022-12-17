@@ -23,12 +23,12 @@ NB. Test 2: Covariance Matrix
 Cov=: albedo_stats_covariance_matrix X
 'Covariance shape should be 2 2' assert_shape Cov; 2 2
 'Covariance is symmetric' assert_near Cov; (albedo_linalg_tr Cov); 1e_6
-'Variance of row 0 should be 5/3 ~ 1.66667' assert_near (Cov < 0 0); (5.0 % 3.0); 1e_5
+'Variance of row 0 should be 5/3 ~ 1.66667' assert_near ((< 0 0) { Cov); (5.0 % 3.0); 1e_5
 
 NB. Test 3: Correlation Matrix
 Corr=: albedo_stats_correlation_matrix Cov
 'Correlation diagonal should be 1.0' assert_near (albedo_linalg_diag_vec Corr); 1.0 1.0; 1e_6
-'Correlation off-diagonals should be 1.0 (perfect correlation in synthetic X)' assert_near (Corr < 0 1); 1.0; 1e_6
+'Correlation off-diagonals should be 1.0 (perfect correlation in synthetic X)' assert_near ((< 0 1) { Corr); 1.0; 1e_6
 
 NB. Test 4: Shrinkage Covariance
 ShrinkCov=: 0.2 albedo_stats_shrinkage_cov X

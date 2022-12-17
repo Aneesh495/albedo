@@ -6,7 +6,7 @@ NB. by assigning the class with the minimum spectral angle.
 NB. Supports maximum angle threshold rejection (label _1 for unclassified/unknown).
 NB. ==============================================================================
 
-cocurrent 'albedo_sam_classifier'
+cocurrent 'base'
 
 load 'detect/sam.ijs'
 
@@ -32,7 +32,7 @@ classify_cube=: 4 : 0
 
   for_h. i. H do.
     for_w. i. W do.
-      pixel_angles=. angle_maps <a:; h; w
+      pixel_angles=. (<a:; h; w) { angle_maps
       min_ang=. <./ pixel_angles
       min_angles=. min_ang (<h, w)} min_angles
       if. min_ang <: max_thresh do.
@@ -46,3 +46,6 @@ classify_cube=: 4 : 0
 
   class_labels; min_angles
 )
+
+
+albedo_sam_classifier_classify_cube =: classify_cube

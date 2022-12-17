@@ -9,7 +9,7 @@ NB.   - Gauss-Legendre Quadrature (2, 3, 5, 7 point rules)
 NB.   - Adaptive recursive Simpson integration
 NB. ==============================================================================
 
-cocurrent 'albedo_quadrature'
+cocurrent 'base'
 
 NB. ------------------------------------------------------------------------------
 NB. Composite Trapezoidal Rule for Non-Uniform Grid Points
@@ -97,3 +97,9 @@ gauss5_integrate=: 4 : 0
   f_vals=. func x_pts
   half_len * +/ weights * f_vals
 )
+
+
+albedo_quadrature_trapz =: trapz
+albedo_quadrature_simpson_13 =: simpson_13
+albedo_quadrature_gauss3_integrate =: gauss3_integrate
+albedo_quadrature_gauss5_integrate =: gauss5_integrate

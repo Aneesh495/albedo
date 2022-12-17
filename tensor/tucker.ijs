@@ -7,7 +7,7 @@ NB. X ~ G x_0 U0 x_1 U1 x_2 U2
 NB. Implements De Lathauwer et al. (SIAM J. Matrix Anal. Appl., 2000).
 NB. ==============================================================================
 
-cocurrent 'albedo_tucker'
+cocurrent 'base'
 
 load 'core/tensor.ijs'
 load 'core/linalg.ijs'
@@ -26,17 +26,17 @@ fit_hosvd=: 4 : 0
   NB. Mode-0 unfolding SVD
   X0=. 0 albedo_tensor_tensor_unfold X
   'svals0 U0_full V0'=. albedo_linalg_svd_power X0
-  U0=. r0 {"1 U0_full
+  U0=. (i. r0) {"1 U0_full
 
   NB. Mode-1 unfolding SVD
   X1=. 1 albedo_tensor_tensor_unfold X
   'svals1 U1_full V1'=. albedo_linalg_svd_power X1
-  U1=. r1 {"1 U1_full
+  U1=. (i. r1) {"1 U1_full
 
   NB. Mode-2 unfolding SVD
   X2=. 2 albedo_tensor_tensor_unfold X
   'svals2 U2_full V2'=. albedo_linalg_svd_power X2
-  U2=. r2 {"1 U2_full
+  U2=. (i. r2) {"1 U2_full
 
   NB. Compute core tensor G = X x_0 U0^T x_1 U1^T x_2 U2^T
   U0t=. albedo_linalg_tr U0
@@ -57,3 +57,7 @@ reconstruct_tucker=: 3 : 0
   'G U0 U1 U2'=. y
   (U0; U1; U2) albedo_tensor_ttm G
 )
+
+
+albedo_tucker_fit_hosvd =: fit_hosvd
+albedo_tucker_reconstruct_tucker =: reconstruct_tucker

@@ -8,7 +8,7 @@ NB. 3. Principal component rotation of noise-whitened data.
 NB. 4. Component ranking strictly by decreasing Signal-to-Noise Ratio (SNR).
 NB. ==============================================================================
 
-cocurrent 'albedo_mnf'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -105,3 +105,7 @@ reconstruct_mnf=: 4 : 0
   Tk_pinv=. albedo_linalg_pinv_svd Tk
   (Tk_pinv albedo_linalg_matmul Y_mnf) + mu
 )
+
+
+albedo_mnf_train_mnf =: train_mnf
+albedo_mnf_project_mnf =: project_mnf

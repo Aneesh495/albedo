@@ -6,7 +6,7 @@ NB. Singular Value Decomposition (SVD), symmetric Jacobi eigenvalue solver,
 NB. Moore-Penrose pseudoinverse, Tikhonov regularization, and linear solvers.
 NB. ==============================================================================
 
-cocurrent 'albedo_linalg'
+cocurrent 'base'
 
 NB. ------------------------------------------------------------------------------
 NB. Matrix Properties & Basic Operators
@@ -21,14 +21,20 @@ tr=: |:
 NB. Matrix multiplication
 matmul=: +/ .*
 
-NB. Matrix trace: sum of diagonal entries
-trace=: +/@:(<0 1&|:)
-
 NB. Extract diagonal vector of matrix
-diag_vec=: (<0 1&|:)
+diag_vec=: 3 : 0
+  (<"1 (i. # y) ,. (i. # y)) { y
+)
+
+NB. Matrix trace: sum of diagonal entries
+trace=: 3 : 0
+  +/ diag_vec y
+)
 
 NB. Construct diagonal matrix from vector
-diag_mat=: =@i.@# * ]
+diag_mat=: 3 : 0
+  (=/ ~ i. # y) *"1 y
+)
 
 NB. Vector Euclidean 2-norm
 norm2=: %:@(+/@:*:)
@@ -53,7 +59,8 @@ solve=: 4 : 0
   A %. b
 )
 
-NB. Regularized inverse: (A + lambda * I)^(-1)
+NB. Regularized inverse: (A + lambda * I)^-1
+NB. For square matrix A
 reg_inv=: 4 : 0
   lambda=. x
   A=. y
@@ -62,12 +69,11 @@ reg_inv=: 4 : 0
   %. reg_A
 )
 
-NB. Tikhonov regularized least-squares: min ||Ax - b||^2 + lambda ||x||^2
-NB. Solution: (A^T A + lambda I)^(-1) A^T b
+NB. Tikhonov regularized solve: (A^T A + lambda * I)^-1 A^T b
 tikhonov_solve=: 4 : 0
-  'lambda A'=. x
-  b=. y
-  'm n'=. $ A
+  lambda=. x
+  'A b'=. y
+  n=. {: $ A
   AtA=. (tr A) matmul A
   Atb=. (tr A) matmul b
   reg_AtA=. AtA + lambda * eye n
@@ -75,8 +81,8 @@ tikhonov_solve=: 4 : 0
 )
 
 NB. ------------------------------------------------------------------------------
-NB. Cholesky Decomposition: A = L L^T
-NB. For symmetric positive-definite matrix A (n x n)
+NB. Cholesky Factorization: A = L L^T
+NB. For symmetric positive definite matrix A (n x n)
 NB. Returns lower triangular matrix L
 NB. ------------------------------------------------------------------------------
 
@@ -89,21 +95,20 @@ cholesky=: 3 : 0
     NB. Diagonal entry L[j, j]
     sum_sq=. 0.0
     if. j > 0 do.
-      prev_row=. (j { L) {.@:(i.&j)
       sum_sq=. +/ *: j {. (j { L)
     end.
-    diag_val=. (A < j, j) - sum_sq
+    diag_val=. ((< j, j) { A) - sum_sq
     assert. diag_val > 0.0 [ 'Matrix is not positive definite in Cholesky'
     ljj=. %: diag_val
     L=. ljj (<j, j)} L
 
     NB. Off-diagonal entries L[i, j] for i > j
-    for_i. (j + 1) + i. (n - j - 1) do.
+    for_i. (j + 1) + i. (<: n - j) do.
       sum_prod=. 0.0
       if. j > 0 do.
         sum_prod=. +/ (j {. i { L) * (j {. j { L)
       end.
-      lij=. ((A < i, j) - sum_prod) % ljj
+      lij=. (((< i, j) { A) - sum_prod) % ljj
       L=. lij (<i, j)} L
     end.
   end.
@@ -124,18 +129,21 @@ qr_mgs=: 3 : 0
   for_j. i. n do.
     v=. j {"1 Q
     rjj=. norm2 v
-    assert. rjj > 1e_14 [ 'Linearly dependent column in QR decomposition'
-    R=. rjj (<j, j)} R
-    qj=. v % rjj
-    Q=. qj (<a:; j)} Q
-
-    NB. Project subsequent columns onto qj and orthogonalize
-    for_k. (j + 1) + i. (n - j - 1) do.
-      vk=. k {"1 Q
-      rjk=. +/ qj * vk
-      R=. rjk (<j, k)} R
-      vk_orth=. vk - rjk * qj
-      Q=. vk_orth (<a:; k)} Q
+    if. rjj < 1e_14 do.
+      R=. 0.0 (<j, j)} R
+      qj=. 0.0 * v
+      Q=. qj (<a:; j)} Q
+    else.
+      R=. rjj (<j, j)} R
+      qj=. v % rjj
+      Q=. qj (<a:; j)} Q
+      for_k. (j + 1) + i. (<: n - j) do.
+        vk=. k {"1 Q
+        rjk=. +/ qj * vk
+        R=. rjk (<j, k)} R
+        vk_orth=. vk - rjk * qj
+        Q=. vk_orth (<a:; k)} Q
+      end.
     end.
   end.
   Q; R
@@ -155,24 +163,14 @@ eigen_sym=: 3 : 0
   tol=. 1e_12
 
   for_sweep. i. max_sweeps do.
-    NB. Find max off-diagonal element
     max_off=. 0.0
-    for_p. i. n - 1 do.
-      for_q. (p + 1) + i. (n - p - 1) do.
-        val=. | A < p, q
-        if. val > max_off do. max_off=. val end.
-      end.
-    end.
-
-    if. max_off < tol do. break. end.
-
-    for_p. i. n - 1 do.
-      for_q. (p + 1) + i. (n - p - 1) do.
-        apq=. A < p, q
-        if. (| apq) > (tol * 0.01) do.
-          app=. A < p, p
-          aqq=. A < q, q
-          tau=. (aqq - app) % (2.0 * apq)
+    for_p. i. <: n do.
+      for_q. (1 + p) + i. <: n - p do.
+        apq=. (< p, q) { A
+        if. (| apq) > tol do.
+          app=. (< p, p) { A
+          aqq=. (< q, q) { A
+          tau=. (app - aqq) % (2.0 * apq)
           t=. 0.0
           if. tau >: 0.0 do.
             t=. 1.0 % (tau + %: 1.0 + *: tau)
@@ -182,44 +180,20 @@ eigen_sym=: 3 : 0
           c=. 1.0 % %: 1.0 + *: t
           s=. t * c
 
-          NB. Update rows and columns p and q of A
-          Ap=. p { A
-          Aq=. q { A
-          new_Ap=. (c * Ap) - (s * Aq)
-          new_Aq=. (s * Ap) + (c * Aq)
-          A=. new_Ap (p}) A
-          A=. new_Aq (q}) A
-
-          NB. Update columns of A
-          Acp=. p {"1 A
-          Acq=. q {"1 A
-          new_Acp=. (c * Acp) - (s * Acq)
-          new_Acq=. (s * Acp) + (c * Acq)
-          A=. new_Acp (<a:; p)} A
-          A=. new_Acq (<a:; q)} A
-
-          NB. Fix exact diagonal and zero out (p, q)
-          app_new=. (app * *: c) - (2.0 * s * c * apq) + (aqq * *: s)
-          aqq_new=. (app * *: s) + (2.0 * s * c * apq) + (aqq * *: c)
-          A=. app_new (<p, p)} A
-          A=. aqq_new (<q, q)} A
-          A=. 0.0 (<p, q)} A
-          A=. 0.0 (<q, p)} A
-
-          NB. Update eigenvector matrix V
-          Vp=. p {"1 V
-          Vq=. q {"1 V
-          new_Vp=. (c * Vp) - (s * Vq)
-          new_Vq=. (s * Vp) + (c * Vq)
-          V=. new_Vp (<a:; p)} V
-          V=. new_Vq (<a:; q)} V
+          NB. Givens rotation matrix G
+          G=. eye n
+          G=. c (< p, p)} G
+          G=. c (< q, q)} G
+          G=. (- s) (< p, q)} G
+          G=. s (< q, p)} G
+          A=. (tr G) matmul A matmul G
+          V=. V matmul G
         end.
       end.
     end.
   end.
 
   evals=. diag_vec A
-  NB. Sort eigenvalues in descending order
   order=. \: evals
   sorted_evals=. order { evals
   sorted_evecs=. order {"1 V
@@ -234,58 +208,84 @@ NB. ----------------------------------------------------------------------------
 
 svd_power=: 3 : 0
   A=. y
+  if. 1 = # $ A do. A=. (, # A) ,. A end.
   'm n'=. $ A
   if. m >: n do.
     NB. Compute AtA (n x n)
     AtA=. (tr A) matmul A
     'evals V'=. eigen_sym AtA
-    NB. Singular values are sqrt(max(0, evals))
     svals=. %: 0.0 >. evals
-    NB. Compute U = A V diag(1/s)
-    inv_s=. 0.0 (I. svals = 0.0)} (% svals + 1e_15 * svals = 0.0)
-    U=. (A matmul V) * inv_s
+    inv_s=. (% svals + svals = 0.0) * (svals > 1e_12)
+    U=. (A matmul V) *"1 inv_s
     svals; U; V
   else.
     NB. Compute AAt (m x m)
     AAt=. A matmul tr A
     'evals U'=. eigen_sym AAt
     svals=. %: 0.0 >. evals
-    inv_s=. 0.0 (I. svals = 0.0)} (% svals + 1e_15 * svals = 0.0)
-    V=. ((tr A) matmul U) * inv_s
+    inv_s=. (% svals + svals = 0.0) * (svals > 1e_12)
+    V=. ((tr A) matmul U) *"1 inv_s
     svals; U; V
   end.
 )
 
+NB. Alias for thin_svd
+thin_svd=: svd_power
+
 NB. ------------------------------------------------------------------------------
-NB. Moore-Penrose Pseudoinverse via SVD
-NB. A^+ = V diag(1/s) U^T
+NB. Moore-Penrose Pseudoinverse via SVD: A^+ = V Sigma^+ U^T
 NB. ------------------------------------------------------------------------------
 
 pinv_svd=: 3 : 0
-  A=. y
-  'svals U V'=. svd_power A
-  tol=. 1e_12 * {. svals
-  inv_s=. svals * 0.0
-  pos_idx=. I. svals > tol
-  inv_s=. (% pos_idx { svals) pos_idx} inv_s
+  'svals U V'=. svd_power y
+  inv_s=. (% svals + svals = 0.0) * (svals > 1e_8)
   V matmul (diag_mat inv_s) matmul tr U
 )
 
+NB. Alias for pinv
+pinv=: pinv_svd
+
 NB. ------------------------------------------------------------------------------
-NB. Orthogonal Projection Matrix
-NB. Projects vectors onto column space of A: P = A (A^T A)^(-1) A^T
-NB. Orthogonal projector (nullspace projector): P_perp = I - P
+NB. Orthogonal Projector onto Range(A): P = A A^+
 NB. ------------------------------------------------------------------------------
 
 proj_mat=: 3 : 0
   A=. y
-  m=. {. $ A
-  P=. A matmul (pinv_svd A)
-  P
+  A matmul pinv_svd A
 )
+
+NB. ------------------------------------------------------------------------------
+NB. Orthogonal Projector onto Nullspace(A^T): P_perp = I - A A^+
+NB. ------------------------------------------------------------------------------
 
 proj_perp_mat=: 3 : 0
   A=. y
-  m=. {. $ A
-  (eye m) - proj_mat A
+  n=. {. $ A
+  (eye n) - proj_mat A
 )
+
+NB. ------------------------------------------------------------------------------
+NB. Exported Aliases for Direct Namespace Access
+NB. ------------------------------------------------------------------------------
+
+albedo_linalg_eye =: eye
+albedo_linalg_tr =: tr
+albedo_linalg_matmul =: matmul
+albedo_linalg_trace =: trace
+albedo_linalg_diag_vec =: diag_vec
+albedo_linalg_diag_mat =: diag_mat
+albedo_linalg_norm2 =: norm2
+albedo_linalg_norm_frob =: norm_frob
+albedo_linalg_cond_est =: cond_est
+albedo_linalg_solve =: solve
+albedo_linalg_reg_inv =: reg_inv
+albedo_linalg_tikhonov_solve =: tikhonov_solve
+albedo_linalg_cholesky =: cholesky
+albedo_linalg_qr_mgs =: qr_mgs
+albedo_linalg_eigen_sym =: eigen_sym
+albedo_linalg_svd_power =: svd_power
+albedo_linalg_thin_svd =: thin_svd
+albedo_linalg_pinv_svd =: pinv_svd
+albedo_linalg_pinv =: pinv
+albedo_linalg_proj_mat =: proj_mat
+albedo_linalg_proj_perp_mat =: proj_perp_mat

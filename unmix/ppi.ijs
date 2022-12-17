@@ -6,7 +6,7 @@ NB. random skewers (unit vectors in multidimensional space) and counting
 NB. how frequently each pixel falls at extreme boundaries.
 NB. ==============================================================================
 
-cocurrent 'albedo_ppi'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -23,7 +23,7 @@ extract_ppi=: 4 : 0
 
   NB. Dimension reduction to p dimensions via SVD
   'svals U V'=. albedo_linalg_svd_power X
-  Up=. p {"1 U
+  Up=. (i. p) {"1 U
   Y=. (albedo_linalg_tr Up) albedo_linalg_matmul X
 
   NB. Initialize pixel hit counts
@@ -52,3 +52,6 @@ extract_ppi=: 4 : 0
   M_endmembers=. top_endmember_indices {"1 X
   M_endmembers; top_endmember_indices; hit_counts
 )
+
+
+albedo_ppi_extract_ppi =: extract_ppi

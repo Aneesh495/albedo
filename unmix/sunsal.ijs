@@ -7,7 +7,7 @@ NB. min (1/2) ||M s - y||_2^2 + lambda ||s||_1  subject to  s >= 0
 NB. using Alternating Direction Method of Multipliers (ADMM).
 NB. ==============================================================================
 
-cocurrent 'albedo_sunsal'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -62,3 +62,6 @@ solve_sunsal=: 4 : 0
 
   0.0 >. v_vec
 )
+
+
+albedo_sunsal_solve_sunsal =: solve_sunsal

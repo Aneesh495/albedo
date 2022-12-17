@@ -6,7 +6,7 @@ NB. Squares (ALS): X ~ sum_{r=1}^R lambda_r (a_r o. b_r o. c_r)
 NB. Computes factor matrices A, B, C and component weights lambda.
 NB. ==============================================================================
 
-cocurrent 'albedo_cp_als'
+cocurrent 'base'
 
 load 'core/tensor.ijs'
 load 'core/linalg.ijs'
@@ -105,3 +105,7 @@ reconstruct_cp=: 3 : 0
 
   X_hat
 )
+
+
+albedo_cp_als_fit_cp_als =: fit_cp_als
+albedo_cp_als_reconstruct_cp =: reconstruct_cp

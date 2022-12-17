@@ -12,7 +12,7 @@ NB.   - Ferrous Iron Index (SWIR / NIR)
 NB.   - Ferric Iron Index (Red / Blue)
 NB. ==============================================================================
 
-cocurrent 'albedo_indices_minerals'
+cocurrent 'base'
 
 load 'io/cube.ijs'
 
@@ -92,3 +92,7 @@ calc_ferric_iron=: 3 : 0
   blue=. 480.0 get_band cube
   red % (blue >. 1e_6)
 )
+
+
+albedo_indices_minerals_calc_clay_index =: calc_clay_index
+albedo_indices_minerals_calc_ndwi =: calc_ndwi

@@ -6,7 +6,7 @@ NB. for minerals, vegetation, water, soil, and urban targets. Implements linear
 NB. and Gaussian bandpass resampling to match arbitrary sensor center wavelengths.
 NB. ==============================================================================
 
-cocurrent 'albedo_spectral_lib'
+cocurrent 'base'
 
 NB. ------------------------------------------------------------------------------
 NB. Wavelength Resampling (Linear Interpolation)
@@ -144,5 +144,14 @@ build_standard_library=: 3 : 0
   calcite=. ref_calcite_mineral wvl
 
   NB. Matrix of shape (B, 5)
-  |: veg ,: soil ,: water ,: asphalt ,: calcite
+  veg ,. soil ,. water ,. asphalt ,. calcite
 )
+
+
+albedo_spectral_lib_standard_wavelengths_224 =: standard_wavelengths_224
+albedo_spectral_lib_build_standard_library =: build_standard_library
+albedo_spectral_lib_resample_spectrum =: resample_spectrum
+albedo_spectral_lib_ref_green_vegetation =: ref_green_vegetation
+albedo_spectral_lib_ref_clear_water =: ref_clear_water
+albedo_spectral_lib_ref_kaolinite_soil =: ref_kaolinite_soil
+albedo_spectral_lib_ref_methane_plume =: ref_methane_plume

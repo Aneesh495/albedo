@@ -5,7 +5,7 @@ NB. Implements arbitrary real-order alpha in [0.0, 2.0] fractional calculus oper
 NB. for spectral curve enhancement, slope extraction, and noise-attenuated inflection analysis.
 NB. ==============================================================================
 
-cocurrent 'albedo_frac'
+cocurrent 'base'
 
 NB. Generate Grünwald-Letnikov weights for order alpha and memory length m
 NB. c_0 = 1
@@ -27,7 +27,7 @@ gl_weights =: 4 : 0
   val =. 1.0
   c =. val 0} c
   for_j. 1 + i. <: m do.
-    val =. val * (j - 1.0 - alpha) % j
+    val =. val * ((j - 1.0) - alpha) % j
     c =. val j} c
   end.
   c
@@ -48,7 +48,7 @@ fractional_derivative_1d =: 4 : 0
   for_i. i. n do.
     k =. (1 + i) <. m
     sub_w =. k {. w
-    sub_s =. |. (i - i. k) { spec
+    sub_s =. (i - i. k) { spec
     out =. ((+/ sub_w * sub_s) % h_factor) i} out
   end.
   out
@@ -60,3 +60,9 @@ fractional_derivative_matrix =: 4 : 0
   mat =. y
   (alpha , h) & fractional_derivative_1d "1 mat
 )
+
+
+NB. Exported Aliases
+albedo_frac_gl_weights =: gl_weights
+albedo_frac_fractional_derivative_1d =: fractional_derivative_1d
+albedo_frac_fractional_derivative_matrix =: fractional_derivative_matrix

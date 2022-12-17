@@ -6,7 +6,7 @@ NB. spectral windowing (Hann, Hamming, Blackman), and Savitzky-Golay polynomial
 NB. smoothing and derivative filters for reflectance spectroscopy.
 NB. ==============================================================================
 
-cocurrent 'albedo_fft'
+cocurrent 'base'
 
 NB. Load linear algebra dependencies
 load 'core/linalg.ijs'
@@ -169,3 +169,12 @@ sg_filter=: 4 : 0
   end.
   res
 )
+
+
+albedo_fft_fft1d =: fft1d
+albedo_fft_ifft1d =: ifft1d
+albedo_fft_fft2d =: fft2d
+albedo_fft_ifft2d =: ifft2d
+albedo_fft_hann_window =: hann_window
+albedo_fft_hamming_window =: hamming_window
+albedo_fft_sg_filter =: sg_filter

@@ -6,7 +6,7 @@ NB. for unsupervised discovery of pure spectral signatures (endmembers)
 NB. forming the vertices of a high-dimensional convex simplex.
 NB. ==============================================================================
 
-cocurrent 'albedo_vca'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -27,7 +27,7 @@ extract_vca=: 4 : 0
 
   NB. SVD dimensionality reduction to p dimensions
   'svals U V'=. albedo_linalg_svd_power X
-  Up=. p {"1 U
+  Up=. (i. p) {"1 U
   NB. Project data onto p-dimensional subspace: Y = Up^T X (shape p x N)
   Y=. (albedo_linalg_tr Up) albedo_linalg_matmul X
 
@@ -45,7 +45,7 @@ extract_vca=: 4 : 0
       f=. w
     else.
       NB. Project w onto orthogonal complement of space spanned by current endmembers
-      Ei=. i {"1 E_proj
+      Ei=. (i. i) {"1 E_proj
       P_perp=. albedo_linalg_proj_perp_mat Ei
       f=. P_perp albedo_linalg_matmul w
       norm_f=. albedo_linalg_norm2 f
@@ -73,3 +73,6 @@ extract_vca=: 4 : 0
   M_endmembers=. endmember_indices {"1 X
   M_endmembers; endmember_indices
 )
+
+
+albedo_vca_extract_vca =: extract_vca

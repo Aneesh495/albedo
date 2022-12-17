@@ -8,7 +8,7 @@ NB.   - White Top-Hat & Black Top-Hat transforms
 NB.   - Multiscale Morphological Profiles (MP) for spatial-spectral feature extraction
 NB. ==============================================================================
 
-cocurrent 'albedo_morphology'
+cocurrent 'base'
 
 NB. ------------------------------------------------------------------------------
 NB. Grayscale Dilation & Erosion with Flat Box Structuring Element (size x size)
@@ -135,3 +135,12 @@ build_mp_2d=: 4 : 0
 
   MP
 )
+
+
+albedo_morphology_dilate_2d =: dilate_2d
+albedo_morphology_erode_2d =: erode_2d
+albedo_morphology_open_2d =: open_2d
+albedo_morphology_close_2d =: close_2d
+albedo_morphology_top_hat_white =: top_hat_white
+albedo_morphology_top_hat_black =: top_hat_black
+albedo_morphology_build_mp_2d =: build_mp_2d

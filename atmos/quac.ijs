@@ -7,7 +7,7 @@ NB. Retrieves surface reflectance directly from scene data without external
 NB. MODTRAN radiative transfer models.
 NB. ==============================================================================
 
-cocurrent 'albedo_quac'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -65,3 +65,6 @@ quac_correction=: 4 : 0
 
   refl_cube; gain_quac; offset_quac
 )
+
+
+albedo_quac_quac_correction =: quac_correction

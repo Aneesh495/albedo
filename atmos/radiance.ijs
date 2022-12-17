@@ -6,7 +6,7 @@ NB. L(lambda), and converts spectral radiance to Top-of-Atmosphere (TOA)
 NB. reflectance rho_TOA(lambda). Identifies bad atmospheric absorption bands.
 NB. ==============================================================================
 
-cocurrent 'albedo_radiance'
+cocurrent 'base'
 
 load 'atmos/solar.ijs'
 
@@ -88,3 +88,8 @@ filter_valid_bands=: 3 : 0
   sub_wvl=. valid_indices { wvl
   sub_cube; sub_wvl; meta
 )
+
+
+albedo_radiance_dn_to_radiance =: dn_to_radiance
+albedo_radiance_radiance_to_toa_reflectance =: radiance_to_toa_reflectance
+albedo_radiance_get_valid_band_mask =: get_valid_band_mask

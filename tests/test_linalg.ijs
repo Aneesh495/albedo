@@ -19,8 +19,8 @@ Mt=: albedo_linalg_tr M
 'Transpose of M' assert_equal Mt; (2 2 $ 1 3 2 4)
 MMt=: M albedo_linalg_matmul Mt
 'MMt shape should be 2 2' assert_shape MMt; 2 2
-'MMt top-left should be 5' assert_equal (MMt < 0 0); 5
-'MMt bottom-right should be 25' assert_equal (MMt < 1 1); 25
+'MMt top-left should be 5' assert_equal ((< 0 0) { MMt); 5
+'MMt bottom-right should be 25' assert_equal ((< 1 1) { MMt); 25
 
 NB. Test 2: Cholesky decomposition: L L^T = A
 NB. Construct SPD matrix A = M M^T + I
@@ -28,7 +28,7 @@ SPD=: MMt + albedo_linalg_eye 2
 L=: albedo_linalg_cholesky SPD
 LLt=: L albedo_linalg_matmul (albedo_linalg_tr L)
 'Cholesky reconstruction LLt = SPD' assert_near LLt; SPD; 1e_6
-'L is lower triangular' assert_equal (L < 0 1); 0.0
+'L is lower triangular' assert_equal ((< 0 1) { L); 0.0
 
 NB. Test 3: QR decomposition: Q R = A and Q^T Q = I
 A_qr=: 3 2 $ 1 2 3 5 2 4

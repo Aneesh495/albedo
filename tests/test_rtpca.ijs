@@ -30,8 +30,8 @@ NB. Run RTPCA decomposition
 'S_est shape is 4 3 3' assert_shape S_est; 4 3 3
 
 NB. Verify sparse tensor captures anomaly spike at (0, 1, 1) and (1, 1, 1)
-'Sparse tensor isolates anomaly spike' assert_true ((S_est < 0 1 1) > 20.0)
-'Sparse tensor is zero away from anomaly' assert_near (S_est < 0 0 0); 0.0; 1.0
+'Sparse tensor isolates anomaly spike' assert_true ((((< 0 1) { S_est) 1) > 20.0)
+'Sparse tensor is zero away from anomaly' assert_near (((< 0 0) { S_est) 0); 0.0; 1.0
 
 NB. Verify sum L + S reconstructs X_total with low error
 RecErr=: albedo_tensor_tensor_fnorm (X_total - (L_est + S_est))

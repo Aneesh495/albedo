@@ -3,6 +3,7 @@ NB. Test Suite: data/usgs_minerals.ijs, data/usgs_vegetation.ijs, data/usgs_urba
 NB. ==============================================================================
 
 load 'tests/test_framework.ijs'
+load 'io/cube.ijs'
 load 'data/usgs_minerals.ijs'
 load 'data/usgs_vegetation.ijs'
 load 'data/usgs_urban.ijs'

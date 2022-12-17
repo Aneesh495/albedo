@@ -6,7 +6,7 @@ NB. roots, inverse matrix square roots (Mahalanobis whitening transforms),
 NB. log-determinants, Householder tridiagonalization, and Generalized SVD.
 NB. ==============================================================================
 
-cocurrent 'albedo_linalg_ext'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -124,3 +124,11 @@ gsvd_pair=: 4 : 0
   X_gen=. (albedo_linalg_tr inv_L) albedo_linalg_matmul V_c
   evals; X_gen
 )
+
+
+albedo_linalg_ext_sqrt_mat_sym =: sqrt_mat_sym
+albedo_linalg_ext_inv_sqrt_mat_sym =: inv_sqrt_mat_sym
+albedo_linalg_ext_pcg_solve =: pcg_solve
+albedo_linalg_ext_det_spd =: det_spd
+albedo_linalg_ext_log_det_spd =: log_det_spd
+albedo_linalg_ext_gsvd_pair =: gsvd_pair

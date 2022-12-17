@@ -15,38 +15,38 @@ assert =: 3 : 0
 echo 'Testing USDA and ECOSTRESS soil library...'
 
 NB. Test dimensions
-assert 25 = # SOIL_NAMES_albedo_soils_
-assert 224 = # WAVELENGTHS_albedo_soils_
-assert (25 224) -: $ SOIL_MATRIX_albedo_soils_
+assert 25 = # albedo_soils_SOIL_NAMES
+assert 224 = # albedo_soils_WAVELENGTHS
+assert (25 224) -: $ albedo_soils_SOIL_MATRIX
 
 NB. Test lookups
-sand_idx =: get_soil_index_albedo_soils_ 'Sand'
+sand_idx =: albedo_soils_get_soil_index 'Sand'
 assert 3 = sand_idx
-peat_idx =: get_soil_index_albedo_soils_ 'Peat'
+peat_idx =: albedo_soils_get_soil_index 'Peat'
 assert 8 = peat_idx
-ox_idx   =: get_soil_index_albedo_soils_ 'Oxisol'
+ox_idx   =: albedo_soils_get_soil_index 'Oxisol'
 assert 10 = ox_idx
 
 NB. Test physical bounds: all reflectance values in [0.02, 0.85]
-assert *./ , (SOIL_MATRIX_albedo_soils_ >: 0.02) *. (SOIL_MATRIX_albedo_soils_ <: 0.85)
+assert *./ , (albedo_soils_SOIL_MATRIX >: 0.02) *. (albedo_soils_SOIL_MATRIX <: 0.85)
 
 NB. Peat (organic rich) has much lower reflectance than Sand or Aridisol
-peat_spec =: get_soil_spectrum_albedo_soils_ 'Peat'
-sand_spec =: get_soil_spectrum_albedo_soils_ 'Sand'
-arid_spec =: get_soil_spectrum_albedo_soils_ 'Aridisol'
+peat_spec =: albedo_soils_get_soil_spectrum 'Peat'
+sand_spec =: albedo_soils_get_soil_spectrum 'Sand'
+arid_spec =: albedo_soils_get_soil_spectrum 'Aridisol'
 assert (+/ peat_spec) < (+/ sand_spec)
 assert (+/ peat_spec) < (+/ arid_spec)
 
 NB. Iron-rich soils (Laterite, Oxisol) exhibit Fe3+ crystal field absorption near 0.88 um
 NB. 0.880 um corresponds to index: round((0.880 - 0.400) / 0.009375) = 51
 fe_idx =: 51
-laterite_spec =: get_soil_spectrum_albedo_soils_ 'Laterite'
+laterite_spec =: albedo_soils_get_soil_spectrum 'Laterite'
 assert (fe_idx { laterite_spec) < ((fe_idx - 15) { laterite_spec)
 
 NB. Clay-rich soil (Vertisol) exhibits strong 2.206 um Al-OH absorption
 NB. 2.206 um corresponds to index: round((2.206 - 0.400) / 0.009375) = 193
 clay_idx =: 193
-vertisol_spec =: get_soil_spectrum_albedo_soils_ 'Vertisol'
+vertisol_spec =: albedo_soils_get_soil_spectrum 'Vertisol'
 assert (clay_idx { vertisol_spec) < ((clay_idx - 10) { vertisol_spec)
 
 echo 'USDA and ECOSTRESS soil library tests passed successfully.'

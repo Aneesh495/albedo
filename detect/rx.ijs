@@ -7,7 +7,7 @@ NB. Evaluates quadratic Mahalanobis metric:
 NB. D_RX(r) = (r - mu_b)^T Sigma_b^(-1) (r - mu_b)
 NB. ==============================================================================
 
-cocurrent 'albedo_rx'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -50,3 +50,7 @@ threshold_anomalies=: 4 : 0
   thresh=. (<. pct * n) { vals
   scores >: thresh
 )
+
+
+albedo_rx_detect_global_rx =: detect_global_rx
+albedo_rx_threshold_anomalies =: threshold_anomalies

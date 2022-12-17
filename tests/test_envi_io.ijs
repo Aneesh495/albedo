@@ -55,7 +55,7 @@ StdLib=: albedo_spectral_lib_build_standard_library W224
 
 NB. Test 6: Cube Container & Slicing
 TestCubeData=: ? 224 16 16 $ 1000
-CubeBox=: albedo_cube_create_cube (TestCubeData; W224; ParsedHdr)
+CubeBox=: albedo_cube_create_cube (TestCubeData; W224; < ParsedHdr)
 'Cube shape is 224 16 16' assert_shape (albedo_cube_cube_data CubeBox); 224 16 16
 
 NB. Spatial slice [0, 8, 0, 8]

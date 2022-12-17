@@ -22,31 +22,31 @@ Cube_injected=: Target_sig (<a:; 8; 8)} Cube_injected
 NB. Test 1: Global RX Anomaly Detector
 Rx_map=: albedo_rx_detect_global_rx Cube_injected
 'RX map shape is 16 16' assert_shape Rx_map; 16 16
-'Anomaly pixel (8,8) has highest RX score' assert_true ((Rx_map < 8 8) = >./ , Rx_map)
+'Anomaly pixel (8,8) has highest RX score' assert_true ((((< 8 8) { Rx_map)) = >./ , Rx_map)
 
 NB. Threshold top 1% anomalies
 Mask_anom=: 0.99 albedo_rx_threshold_anomalies Rx_map
-'Injected pixel (8,8) is flagged as anomaly' assert_true (Mask_anom < 8 8)
+'Injected pixel (8,8) is flagged as anomaly' assert_true (((< 8 8) { Mask_anom))
 
 NB. Test 2: Dual-Window Local RX Detector
 Local_rx=: (3; 7) albedo_local_rx_detect_local_rx Cube_injected
 'Local RX map shape is 16 16' assert_shape Local_rx; 16 16
-'Anomaly pixel (8,8) detected locally' assert_true ((Local_rx < 8 8) > 10.0)
+'Anomaly pixel (8,8) detected locally' assert_true ((((< 8 8) { Local_rx)) > 10.0)
 
 NB. Test 3: Constrained Energy Minimization (CEM)
 Cem_scores=: Target_sig albedo_target_detect_detect_cem Cube_injected
 'CEM map shape is 16 16' assert_shape Cem_scores; 16 16
-'CEM response on target pixel near 1.0' assert_near (Cem_scores < 8 8); 1.0; 0.1
-'CEM response on target is highest in scene' assert_true ((Cem_scores < 8 8) = >./ , Cem_scores)
+'CEM response on target pixel near 1.0' assert_near (((< 8 8) { Cem_scores)); 1.0; 0.1
+'CEM response on target is highest in scene' assert_true ((((< 8 8) { Cem_scores)) = >./ , Cem_scores)
 
 NB. Test 4: Spectral Matched Filter (MF)
 Mf_scores=: Target_sig albedo_target_detect_detect_matched_filter Cube_injected
-'MF response on target is highest in scene' assert_true ((Mf_scores < 8 8) = >./ , Mf_scores)
+'MF response on target is highest in scene' assert_true ((((< 8 8) { Mf_scores)) = >./ , Mf_scores)
 
 NB. Test 5: Adaptive Cosine Estimator (ACE)
 Ace_scores=: Target_sig albedo_target_detect_detect_ace Cube_injected
 'ACE scores strictly in [0, 1]' assert_true (*./ (*./ , Ace_scores >: 0.0) *. (*./ , Ace_scores <: 1.0))
-'ACE score on target pixel near 1.0' assert_near (Ace_scores < 8 8); 1.0; 0.1
+'ACE score on target pixel near 1.0' assert_near (((< 8 8) { Ace_scores)); 1.0; 0.1
 
 NB. Test 6: Spectral Angle Mapper (SAM)
 VecA=: 1.0 2.0 3.0 4.0
@@ -60,7 +60,7 @@ AngleOrth=: VecA albedo_similarity_spectral_angle VecOrth
 
 Sam_map=: Target_sig albedo_similarity_sam_cube Cube_injected
 'SAM map shape is 16 16' assert_shape Sam_map; 16 16
-'Target pixel has minimal angle' assert_true ((Sam_map < 8 8) = <./ , Sam_map)
+'Target pixel has minimal angle' assert_true ((((< 8 8) { Sam_map)) = <./ , Sam_map)
 
 NB. Test 7: Spectral Information Divergence (SID)
 Sid_self=: VecA albedo_similarity_spectral_information_divergence VecA

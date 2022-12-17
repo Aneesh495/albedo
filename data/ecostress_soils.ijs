@@ -5,7 +5,7 @@ NB. Provides 224-band laboratory reflectance signatures across soil texture clas
 NB. and taxonomic soil orders from 0.400 to 2.500 micrometers.
 NB. ==============================================================================
 
-cocurrent 'albedo_soils'
+cocurrent 'base'
 
 NB. 224 Wavelength centers in micrometers (0.400 to 2.500 um)
 WAVELENGTHS =: 0.400 + 0.009375 * i. 224
@@ -79,3 +79,11 @@ get_soil_spectrum =: 3 : 0
     idx { SOIL_MATRIX
   end.
 )
+
+
+NB. Exported Aliases
+albedo_soils_SOIL_NAMES =: SOIL_NAMES
+albedo_soils_WAVELENGTHS =: WAVELENGTHS
+albedo_soils_SOIL_MATRIX =: SOIL_MATRIX
+albedo_soils_get_soil_index =: get_soil_index
+albedo_soils_get_soil_spectrum =: get_soil_spectrum

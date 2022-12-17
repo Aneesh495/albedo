@@ -5,7 +5,7 @@ NB. Implements Hyvärinen fixed-point FastICA with negentropy contrast functions
 NB. Gram-Schmidt deflationary orthogonalization, and spectral source separation.
 NB. ==============================================================================
 
-cocurrent 'albedo_ica'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -118,3 +118,7 @@ fastica =: 4 : 0
   sources =. xw +/ .* |: w_accum
   sources ; w_accum ; w_white
 )
+
+
+NB. Exported Aliases
+albedo_ica_fastica =: fastica

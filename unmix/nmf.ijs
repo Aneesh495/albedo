@@ -5,7 +5,7 @@ NB. Implements Lee-Seung multiplicative updates with sum-to-one projection
 NB. and Frobenius reconstruction loss for simultaneous endmember and abundance retrieval.
 NB. ==============================================================================
 
-cocurrent 'albedo_nmf'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -71,3 +71,7 @@ nmf_unmix =: 4 : 0
   loss =. nmf_loss (Y ; M ; S)
   M ; S ; loss
 )
+
+
+NB. Exported Aliases
+albedo_nmf_nmf_unmix =: nmf_unmix

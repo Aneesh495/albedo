@@ -6,7 +6,7 @@ NB. solar zenith angle calculation, and Thuillier 2003 reference solar irradianc
 NB. spectrum E0(lambda) in W / (m^2 * nm).
 NB. ==============================================================================
 
-cocurrent 'albedo_solar'
+cocurrent 'base'
 
 PI=: 3.14159265358979323846
 DEG2RAD=: PI % 180.0
@@ -74,3 +74,10 @@ solar_irradiance_e0=: 3 : 0
   scale=. 2.0 % ((c1 % (0.5 ^ 5)) % (<: ^ (c2 % (0.5 * T))))
   0.01 >. (planck * scale)
 )
+
+
+albedo_solar_earth_sun_dist_sq =: earth_sun_dist_sq
+albedo_solar_solar_declination_deg =: solar_declination_deg
+albedo_solar_solar_zenith_angle =: solar_zenith_angle
+albedo_solar_cos_solar_zenith =: cos_solar_zenith
+albedo_solar_solar_irradiance_e0 =: solar_irradiance_e0

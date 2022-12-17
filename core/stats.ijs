@@ -6,7 +6,7 @@ NB. shrinkage covariance, spectral correlation matrices, batch Mahalanobis
 NB. distances, SNR channel estimation, and robust outlier-resistant statistics.
 NB. ==============================================================================
 
-cocurrent 'albedo_stats'
+cocurrent 'base'
 
 NB. Load linear algebra dependencies
 load 'core/linalg.ijs'
@@ -67,7 +67,7 @@ correlation_matrix=: 3 : 0
   NB. Outer product of stds
   denom=. stds */ stds
   NB. Protect against zero division
-  denom=. 1.0 (I. denom = 0.0)} denom
+  denom=. denom + (denom = 0.0)
   Sigma % denom
 )
 
@@ -166,3 +166,17 @@ robust_zscore=: 3 : 0
   scale=. mad v
   if. scale = 0.0 do. v * 0.0 else. (v - med) % scale end.
 )
+
+
+albedo_stats_mean_vector =: mean_vector
+albedo_stats_center_matrix =: center_matrix
+albedo_stats_covariance_matrix =: covariance_matrix
+albedo_stats_shrinkage_cov =: shrinkage_cov
+albedo_stats_correlation_matrix =: correlation_matrix
+albedo_stats_mahalanobis_sq =: mahalanobis_sq
+albedo_stats_batch_mahalanobis_sq =: batch_mahalanobis_sq
+albedo_stats_channel_snr =: channel_snr
+albedo_stats_cube_snr_profile =: cube_snr_profile
+albedo_stats_median =: median
+albedo_stats_mad =: mad
+albedo_stats_winsorize =: winsorize

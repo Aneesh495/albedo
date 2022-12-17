@@ -34,6 +34,6 @@ Methane_sig=: albedo_spectral_lib_ref_methane_plume Wvls
 'ACE map shape is 16 16' assert_shape AceMap; 16 16
 'At least one target hit detected' assert_true (0 < # DetCoords)
 NB. Verify detected coordinate contains the injected plume (around row 8, col 4)
-'Plume area detected by pipeline' assert_true (+/ (DetMask < 8 4) , (DetMask < 8 5) , (DetMask < 9 4))
+'Plume area detected by pipeline' assert_true (+/ (((< 8 4) { DetMask)) , (((< 8 5) { DetMask)) , (((< 9 4) { DetMask)))
 
 suite_end ''

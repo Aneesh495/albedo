@@ -6,7 +6,7 @@ NB. inscribed within the hyperspectral data cloud. The vertices of the maximum
 NB. volume simplex correspond to pure spectral endmembers.
 NB. ==============================================================================
 
-cocurrent 'albedo_nfindr'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -16,11 +16,12 @@ NB. V(E) = (1 / (p - 1)!) * |det [ 1^T ; E ]|
 NB. ------------------------------------------------------------------------------
 
 simplex_volume=: 3 : 0
+
   E_red=. y
   'p_minus_1 p'=. $ E_red
   NB. Augment top row of ones: shape (p, p)
   ones_row=. 1, p $ 1.0
-  Aug=. (1.0 $~ p) ,: E_red
+  Aug=. (p $ 1.0) , E_red
   NB. Compute determinant of Aug via QR factorization
   'Q R'=. albedo_linalg_qr_mgs Aug
   diag_R=. albedo_linalg_diag_vec R
@@ -44,7 +45,7 @@ extract_nfindr=: 4 : 0
 
   NB. SVD dimension reduction to (p - 1) dimensions
   'svals U V'=. albedo_linalg_svd_power X
-  Up=. (p - 1) {"1 U
+  Up=. (i. <: p) {"1 U
   NB. Project data onto (p - 1)-dimensional space: Y shape is ((p-1) x N)
   Y=. (albedo_linalg_tr Up) albedo_linalg_matmul X
 
@@ -84,3 +85,7 @@ extract_nfindr=: 4 : 0
   M_endmembers=. endmember_indices {"1 X
   M_endmembers; endmember_indices; current_vol
 )
+
+
+albedo_nfindr_simplex_volume =: simplex_volume
+albedo_nfindr_extract_nfindr =: extract_nfindr

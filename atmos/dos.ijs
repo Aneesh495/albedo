@@ -6,7 +6,7 @@ NB. to estimate path radiance Lp(lambda) from shadow/dark pixels and retrieve
 NB. Bottom-of-Atmosphere (BOA) surface reflectance.
 NB. ==============================================================================
 
-cocurrent 'albedo_dos'
+cocurrent 'base'
 
 load 'atmos/solar.ijs'
 
@@ -90,3 +90,7 @@ cost_correction=: 4 : 0
   end.
   boa_cube; Lp
 )
+
+
+albedo_dos_estimate_path_radiance =: estimate_path_radiance
+albedo_dos_dos1_correction =: dos1_correction

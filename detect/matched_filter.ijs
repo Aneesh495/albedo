@@ -9,7 +9,7 @@ NB.   2. Spectral Matched Filter (MF)
 NB.   3. Adaptive Cosine / Coherence Estimator (ACE)
 NB. ==============================================================================
 
-cocurrent 'albedo_target_detect'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -116,3 +116,8 @@ detect_ace=: 4 : 0
   ace_scores=. 0.0 >. 1.0 <. (num % denom_tot)
   (H, W) $ ace_scores
 )
+
+
+albedo_target_detect_detect_cem =: detect_cem
+albedo_target_detect_detect_matched_filter =: detect_matched_filter
+albedo_target_detect_detect_ace =: detect_ace

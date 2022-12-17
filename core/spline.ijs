@@ -6,7 +6,7 @@ NB. Evaluates piecewise cubic polynomials, continuous first derivatives, and
 NB. second derivatives for high-precision spectral signature reconstruction.
 NB. ==============================================================================
 
-cocurrent 'albedo_spline'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -123,3 +123,7 @@ eval_spline=: 4 : 0
 
   out
 )
+
+
+albedo_spline_fit_natural_spline =: fit_natural_spline
+albedo_spline_eval_spline =: eval_spline

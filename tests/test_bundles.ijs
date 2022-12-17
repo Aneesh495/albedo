@@ -29,7 +29,7 @@ y_shaded=: 0.5 * y_clean
 'ELMM recovers abundance fractions' assert_near s_est; s_true; 0.05
 
 NB. Test 3: Batch ELMM Unmixing on 3D Cube
-'Abundances ScaleMap'=: M_true albedo_bundles_unmix_elmm_cube (ReflNoisy <a:; (i. 4); (i. 4))
+'Abundances ScaleMap'=: M_true albedo_bundles_unmix_elmm_cube ((<a:; (i. 4); (i. 4)) { ReflNoisy)
 'Abundances shape is 5 4 4' assert_shape Abundances; 5 4 4
 'ScaleMap shape is 4 4' assert_shape ScaleMap; 4 4
 'Scaling factors are strictly positive' assert_true (*./ (*./ ScaleMap > 0.1))

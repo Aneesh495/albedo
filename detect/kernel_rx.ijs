@@ -5,7 +5,7 @@ NB. Maps spectral pixels into reproducing kernel Hilbert space (RKHS) via Gaussi
 NB. kernels to detect nonlinear manifolds and subtle non-Gaussian subpixel anomalies.
 NB. ==============================================================================
 
-cocurrent 'albedo_krx'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -30,20 +30,16 @@ rbf_gram_matrix =: 4 : 0
   dist2 =. (norms2 +/ norms2) - 2.0 * dot_prod
   NB. Zero negative values due to floating-point rounding
   dist2 =. 0.0 >. dist2
-  ^. - gamma * dist2
+  ^ - gamma * dist2
 )
 
 NB. Center Gram matrix in Hilbert space:
 NB. K_tilde = K - 1_N K - K 1_N + 1_N K 1_N
 NB. where 1_N is (1/N) * J_N
 center_gram_matrix =: 3 : 0
-  K =. y
-  n =. # K
-  row_means =. (+/"1 K) % n
-  col_means =. (+/ K) % n
-  all_mean  =. (+/ col_means) % n
-  NB. Centered: K - row_means - col_means + all_mean
-  (K -"1 row_means) -"1 col_means +"0 all_mean
+  n =. # y
+  H =. (=/ ~ i. n) - (% n)
+  H +/ .* y +/ .* H
 )
 
 NB. Run Kernel RX Anomaly Detection on spectral dataset:
@@ -64,10 +60,16 @@ kernel_rx =: 4 : 0
   NB. 3. Regularized pseudo-inverse: (K_tilde + lambda * I)^-1
   eye_n =. =/ ~ i. n
   K_reg =. K_tilde + lambda * eye_n
-  K_inv =. pinv_albedo_linalg_ K_reg
+  K_inv =. albedo_linalg_pinv_svd K_reg
 
   NB. 4. Kernel RX score for pixel i is the i-th diagonal element of K_tilde * K_inv * K_tilde
   NB. score = diag(K_tilde * K_inv * K_tilde)
   quad =. (K_tilde +/ .* K_inv) +/ .* K_tilde
   (<"1 (i. n) ,. (i. n)) { quad
 )
+
+
+NB. Exported Aliases
+albedo_krx_rbf_gram_matrix =: rbf_gram_matrix
+albedo_krx_center_gram_matrix =: center_gram_matrix
+albedo_krx_kernel_rx =: kernel_rx

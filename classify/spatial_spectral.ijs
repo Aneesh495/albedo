@@ -5,7 +5,7 @@ NB. Applies morphological filtering and 2D spatial majority voting to remove
 NB. isolated salt-and-pepper classification noise and enforce spatial coherence.
 NB. ==============================================================================
 
-cocurrent 'albedo_spatial_spectral'
+cocurrent 'base'
 
 NB. Mode (most frequent element) of an integer vector
 vector_mode=: 3 : 0
@@ -43,3 +43,6 @@ majority_filter=: 4 : 0
   end.
   cleaned
 )
+
+
+albedo_spatial_spectral_majority_filter =: majority_filter

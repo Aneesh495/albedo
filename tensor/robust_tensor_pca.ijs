@@ -11,7 +11,7 @@ NB. Solves via Alternating Direction Method of Multipliers (ADMM) with
 NB. Tensor Singular Value Thresholding (t-SVT) and soft-thresholding.
 NB. ==============================================================================
 
-cocurrent 'albedo_rtpca'
+cocurrent 'base'
 
 load 'core/tensor.ijs'
 load 'core/linalg.ijs'
@@ -88,3 +88,6 @@ fit_rtpca=: 4 : 0
   NB. Returns (L_background; S_sparse_anomalies)
   L; S
 )
+
+
+albedo_rtpca_fit_rtpca =: fit_rtpca

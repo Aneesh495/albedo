@@ -35,7 +35,7 @@ X =: S +/ .* |: A
 assert (100 2) -: $ X
 
 NB. Run FastICA for 2 components
-'sources W W_white' =: 2 fastica_albedo_ica_ X
+'sources W W_white' =: 2 albedo_ica_fastica X
 
 assert (100 2) -: $ sources
 assert (2 2) -: $ W

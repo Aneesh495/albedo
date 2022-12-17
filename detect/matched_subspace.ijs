@@ -5,7 +5,7 @@ NB. Implements GLRT subspace projection detector against composite hypotheses
 NB. where both target and background clutter occupy low-dimensional linear subspaces.
 NB. ==============================================================================
 
-cocurrent 'albedo_amsd'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -50,3 +50,7 @@ amsd_detector =: 4 : 0
   NB. Map over rows of X
   (PB_perp ; PZ_perp) & amsd_pixel "1 X
 )
+
+
+NB. Exported Aliases
+albedo_amsd_amsd_detector =: amsd_detector

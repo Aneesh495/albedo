@@ -20,7 +20,7 @@ NB.   - Quartz HS18      (spectrally flat high reflectance in VNIR/SWIR)
 NB.   - Jarosite GDS99   (K-Fe sulfate absorption at 430, 900, 1470, 1850, 2265 nm)
 NB. ==============================================================================
 
-cocurrent 'albedo_usgs_minerals'
+cocurrent 'base'
 
 load 'io/spectral_lib.ijs'
 
@@ -198,5 +198,9 @@ build_usgs_mineral_library=: 3 : 0
   qu=.  spec_quartz_hs18 wvl
   ja=.  spec_jarosite_gds99 wvl
 
-  |: k1 ,: k2 ,: al ,: ca ,: do ,: he ,: go ,: mo ,: il ,: mu ,: ch ,: ep ,: gy ,: qu ,: ja
+  k1 ,. k2 ,. al ,. ca ,. do ,. he ,. go ,. mo ,. il ,. mu ,. ch ,. ep ,. gy ,. qu ,. ja
 )
+
+
+albedo_usgs_minerals_build_usgs_mineral_library =: build_usgs_mineral_library
+albedo_usgs_minerals_W224 =: W224

@@ -9,7 +9,7 @@ NB.   - PRI:  Photochemical Reflectance Index (Gamon et al., 1992)
 NB.   - MCARI: Modified Chlorophyll Absorption in Reflectance Index
 NB. ==============================================================================
 
-cocurrent 'albedo_indices_veg'
+cocurrent 'base'
 
 load 'io/cube.ijs'
 
@@ -82,3 +82,9 @@ calc_mcari=: 3 : 0
   part2=. r700 % (r670 >. 1e_6)
   part1 * part2
 )
+
+
+albedo_indices_veg_norm_diff =: norm_diff
+albedo_indices_veg_calc_ndvi =: calc_ndvi
+albedo_indices_veg_calc_ndre =: calc_ndre
+albedo_indices_veg_calc_evi =: calc_evi

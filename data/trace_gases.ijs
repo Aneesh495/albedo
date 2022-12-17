@@ -5,7 +5,7 @@ NB. Absorption cross-sections for CH4, CO2, CO, SO2, NH3, NO2, N2O, and H2O
 NB. from 0.400 to 2.500 micrometers with Beer-Lambert plume transmission models.
 NB. ==============================================================================
 
-cocurrent 'albedo_gases'
+cocurrent 'base'
 
 NB. 224 Wavelength centers in micrometers (0.400 to 2.500 um)
 WAVELENGTHS =: 0.400 + 0.009375 * i. 224
@@ -101,3 +101,13 @@ gas_radiance_perturbation =: 3 : 0
   sigma =. get_gas_cross_section gas_name
   - L_0 * sigma * u_ppm_m * 2.45e_6
 )
+
+
+NB. Exported Aliases
+albedo_gases_GAS_NAMES =: GAS_NAMES
+albedo_gases_WAVELENGTHS =: WAVELENGTHS
+albedo_gases_SIGMA_MATRIX =: SIGMA_MATRIX
+albedo_gases_get_gas_index =: get_gas_index
+albedo_gases_get_gas_cross_section =: get_gas_cross_section
+albedo_gases_gas_transmittance =: gas_transmittance
+albedo_gases_gas_radiance_perturbation =: gas_radiance_perturbation

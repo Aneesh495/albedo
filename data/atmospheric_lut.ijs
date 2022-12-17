@@ -12,7 +12,7 @@ NB.   5. Subarctic Summer (columnar water vapor 2.1 g/cm^2)
 NB.   6. Subarctic Winter (dry atmosphere 0.42 g/cm^2)
 NB. ==============================================================================
 
-cocurrent 'albedo_atmos_lut'
+cocurrent 'base'
 
 load 'io/spectral_lib.ijs'
 
@@ -137,3 +137,11 @@ NB. Subarctic Winter (cw = 0.42 g/cm^2 -> scale = 0.30)
 trans_subarctic_winter=: 3 : 0
   (30.0; 0.30) atmospheric_transmission y
 )
+
+
+albedo_atmos_lut_W224 =: W224
+albedo_atmos_lut_rayleigh_optical_depth =: rayleigh_optical_depth
+albedo_atmos_lut_oxygen_optical_depth =: oxygen_optical_depth
+albedo_atmos_lut_trans_tropical =: trans_tropical
+albedo_atmos_lut_trans_us_standard_1976 =: trans_us_standard_1976
+albedo_atmos_lut_trans_subarctic_winter =: trans_subarctic_winter

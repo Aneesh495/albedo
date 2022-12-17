@@ -25,17 +25,17 @@ X =: anomaly (< 7) } bg
 assert (n, b) -: $ X
 
 NB. Test Gram matrix calculation
-K =: 0.1 rbf_gram_matrix_albedo_krx_ X
+K =: 0.1 albedo_krx_rbf_gram_matrix X
 assert (n, n) -: $ K
 NB. Diagonal elements must be exp(0) = 1.0
 assert *./ 1e_6 > | 1.0 - (<"1 (i. n) ,. (i. n)) { K
 
 NB. Test Gram matrix centering
-K_tilde =: center_gram_matrix_albedo_krx_ K
+K_tilde =: albedo_krx_center_gram_matrix K
 assert 1e_6 > | +/ , K_tilde
 
 NB. Run Kernel RX detection (gamma=0.5, lambda=1e-3)
-scores =: (0.5 1e_3) kernel_rx_albedo_krx_ X
+scores =: (0.5 1e_3) albedo_krx_kernel_rx X
 assert n = # scores
 
 NB. The injected anomaly at index 7 must produce the highest anomaly score

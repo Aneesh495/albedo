@@ -5,7 +5,7 @@ NB. Solves min ||A x - b||_2^2 subject to x >= 0 using the active set method
 NB. (Lawson & Hanson, 1974). Guarantees exact convergence to global minimum.
 NB. ==============================================================================
 
-cocurrent 'albedo_nnls'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -110,3 +110,6 @@ batch_nnls=: 4 : 0
   end.
   X_res
 )
+
+
+albedo_nnls_solve_nnls =: solve_nnls

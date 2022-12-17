@@ -5,7 +5,7 @@ NB. Implements 2D spatial convolution, Sobel/Prewitt/Laplacian edge detectors,
 NB. Gaussian blurring, and bilateral filtering for spatial-spectral preprocessing.
 NB. ==============================================================================
 
-cocurrent 'albedo_spatial'
+cocurrent 'base'
 
 NB. Standard 3x3 Differential Kernels
 SOBEL_H =: 3 3 $ _1 0 1  _2 0 2  _1 0 1
@@ -26,7 +26,7 @@ convolve2d =: 4 : 0
   'h w' =. $ img
   pad_h =. <. -: kh
   pad_w =. <. -: kw
-  out =. (h, w) # 0.0
+  out =. (h, w) $ 0.0
 
   for_r. i. h do.
     for_c. i. w do.
@@ -37,7 +37,7 @@ convolve2d =: 4 : 0
           for_kc. i. kw do.
             cc =. c + kc - pad_w
             if. (cc >: 0) *. (cc < w) do.
-              acc =. acc + (img {~ rr , cc) * (kernel {~ kr , kc)
+              acc =. acc + ((< rr, cc) { img) * ((< kr, kc) { kernel)
             end.
           end.
         end.
@@ -60,7 +60,7 @@ gaussian_kernel =: 3 : 0
   r_mat =. (dim, dim) $ coords
   c_mat =. |: r_mat
   r2 =. (*: r_mat) + (*: c_mat)
-  k =. ^. - r2 % 2.0 * *: sigma
+  k =. ^ - r2 % 2.0 * *: sigma
   k % +/ , k
 )
 
@@ -69,7 +69,7 @@ sobel_gradient =: 3 : 0
   gx =. SOBEL_H convolve2d y
   gy =. SOBEL_V convolve2d y
   mag =. %: (*: gx) + (*: gy)
-  dir =. gy (12 o.) gx NB. arctan2(gy, gx) in J
+  dir =. _3 o. gy % gx + (gx = 0.0) NB. arctan2(gy, gx) in J
   mag ; dir
 )
 
@@ -81,14 +81,14 @@ bilateral_filter2d =: 4 : 0
   img =. y
   'h w' =. $ img
   dim =. 1 + 2 * hw
-  out =. (h, w) # 0.0
+  out =. (h, w) $ 0.0
 
   two_sig_s2 =. 2.0 * *: sig_s
   two_sig_r2 =. 2.0 * *: sig_r
 
   for_r. i. h do.
     for_c. i. w do.
-      center_val =. img {~ r , c
+      center_val =. (< r, c) { img
       w_sum =. 0.0
       val_sum =. 0.0
       for_dr. (i. dim) - hw do.
@@ -97,11 +97,11 @@ bilateral_filter2d =: 4 : 0
           for_dc. (i. dim) - hw do.
             cc =. c + dc
             if. (cc >: 0) *. (cc < w) do.
-              neighbor_val =. img {~ rr , cc
+              neighbor_val =. (< rr, cc) { img
               spatial_dist2 =. (*: dr) + (*: dc)
               range_dist2 =. *: neighbor_val - center_val
-              spatial_weight =. ^. - spatial_dist2 % two_sig_s2
-              range_weight   =. ^. - range_dist2 % two_sig_r2
+              spatial_weight =. ^ - spatial_dist2 % two_sig_s2
+              range_weight   =. ^ - range_dist2 % two_sig_r2
               weight =. spatial_weight * range_weight
               w_sum =. w_sum + weight
               val_sum =. val_sum + weight * neighbor_val
@@ -114,3 +114,12 @@ bilateral_filter2d =: 4 : 0
   end.
   out
 )
+
+
+NB. Exported Aliases
+albedo_spatial_SOBEL_H =: SOBEL_H
+albedo_spatial_SOBEL_V =: SOBEL_V
+albedo_spatial_LAPLACIAN_4 =: LAPLACIAN_4
+albedo_spatial_gaussian_kernel =: gaussian_kernel
+albedo_spatial_sobel_gradient =: sobel_gradient
+albedo_spatial_bilateral_filter2d =: bilateral_filter2d

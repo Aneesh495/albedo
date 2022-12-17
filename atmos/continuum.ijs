@@ -7,7 +7,7 @@ NB. band center wavelength, maximum band depth, full width at half depth (FWHD),
 NB. and integrated absorption band area.
 NB. ==============================================================================
 
-cocurrent 'albedo_continuum'
+cocurrent 'base'
 
 NB. ------------------------------------------------------------------------------
 NB. Upper Convex Hull Calculation for 1D Spectral Curve
@@ -128,10 +128,15 @@ batch_continuum_cube=: 4 : 0
 
   for_h. i. H do.
     for_w. i. W do.
-      spec=. cube <a:; h; w
+      spec=. (<a:; h; w) { cube
       cr_spec=. wvl remove_continuum spec
       out_cube=. cr_spec (<a:; h; w)} out_cube
     end.
   end.
   out_cube
 )
+
+
+albedo_continuum_upper_convex_hull =: upper_convex_hull
+albedo_continuum_remove_continuum =: remove_continuum
+albedo_continuum_characterize_absorption =: characterize_absorption

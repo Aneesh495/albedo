@@ -41,8 +41,8 @@ RawDN=: 2 4 4 $ 1000
 Gains=: 0.05 0.08
 Offsets=: _1.0 _2.0
 RadCube=: (Gains; Offsets) albedo_radiance_dn_to_radiance RawDN
-'Radiance band 0 value is 49.0' assert_near (RadCube < 0 0 0); 49.0; 1e_5
-'Radiance band 1 value is 78.0' assert_near (RadCube < 1 0 0); 78.0; 1e_5
+'Radiance band 0 value is 49.0' assert_near (((< 0 0) { RadCube) 0); 49.0; 1e_5
+'Radiance band 1 value is 78.0' assert_near (((< 1 0) { RadCube) 0); 78.0; 1e_5
 
 NB. Convert to TOA Reflectance
 Wvls=: 550.0 850.0

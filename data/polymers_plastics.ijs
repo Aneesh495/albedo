@@ -5,7 +5,7 @@ NB. Spectral reflectance signatures for urban materials, polymers, and marine de
 NB. plastics from 0.400 to 2.500 micrometers with diagnostic C-H vibrational overtones.
 NB. ==============================================================================
 
-cocurrent 'albedo_plastics'
+cocurrent 'base'
 
 NB. 224 Wavelength centers in micrometers (0.400 to 2.500 um)
 WAVELENGTHS =: 0.400 + 0.009375 * i. 224
@@ -100,3 +100,12 @@ plastic_hydrocarbon_index =: 3 : 0
   depth =. cont - (i173 { spec)
   depth % (cont + 1e_6)
 )
+
+
+NB. Exported Aliases
+albedo_plastics_PLASTIC_NAMES =: PLASTIC_NAMES
+albedo_plastics_WAVELENGTHS =: WAVELENGTHS
+albedo_plastics_PLASTIC_MATRIX =: PLASTIC_MATRIX
+albedo_plastics_get_plastic_index =: get_plastic_index
+albedo_plastics_get_plastic_spectrum =: get_plastic_spectrum
+albedo_plastics_plastic_hydrocarbon_index =: plastic_hydrocarbon_index

@@ -6,7 +6,7 @@ NB. tensor folding, mode-n matrix products, Kronecker products, Khatri-Rao produ
 NB. tensor contractions, Frobenius norms, and rank-1 outer products.
 NB. ==============================================================================
 
-cocurrent 'albedo_tensor'
+cocurrent 'base'
 
 NB. ------------------------------------------------------------------------------
 NB. Dimension & Rank Helpers
@@ -19,7 +19,7 @@ NB. Total number of scalar entries in tensor
 tensor_size=: */@$
 
 NB. Tensor Frobenius norm: sqrt(sum(x^2))
-tensor_fnorm=: %:@(+/@:(,^:2)@:|)
+tensor_fnorm=: %:@(+/@:(*:)@:,)
 
 NB. Tensor inner product between two tensors of matching shape
 tensor_inner=: 4 : 0
@@ -50,7 +50,7 @@ kronecker=: 4 : 0
   'p q'=. $ y
   prod=. x */ y
   NB. prod shape is (m, n, p, q) -> transpose to (m, p, n, q) -> reshape to (mp, nq)
-  (m * p, n * q) $ 1 3 0 2 |: prod
+  ((m * p) , (n * q)) $ , 0 2 1 3 |: prod
 )
 
 NB. Khatri-Rao product (column-wise Kronecker product): A (*) B
@@ -62,14 +62,14 @@ khatri_rao=: 4 : 0
   assert. R1 = R2 [ 'Column dimensions must match for Khatri-Rao product'
   R=. R1
   NB. Compute for each column r: A[:, r] (x) B[:, r]
-  res=. (I * J, R) $ 0
+  cols=. 0 $ <''
   for_r. i. R do.
     col_a=. r {"1 x
     col_b=. r {"1 y
     col_kr=. , col_a */ col_b
-    res=. col_kr (<a:; r)} res
+    cols=. cols , < col_kr
   end.
-  res
+  |: > cols
 )
 
 NB. ------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ tensor_unfold=: 4 : 0
   NB. Reshape to 2D matrix
   dim_n=. n { dims
   other_prod=. */ (other_modes { dims)
-  (dim_n, other_prod) $ permuted
+  (dim_n, other_prod) $ , permuted
 )
 
 NB. Tensor Folding: reconstruct original tensor from mode-n unfolded matrix
@@ -110,7 +110,7 @@ tensor_fold=: 4 : 0
 
   NB. Reshape M back to permuted dimensions
   perm_dims=. dim_n, (other_modes { dims)
-  reshaped=. perm_dims $ M
+  reshaped=. perm_dims $ , M
 
   NB. Invert permutation
   perm=. n, other_modes
@@ -175,7 +175,7 @@ NB. For 3D tensor of shape (B, H, W):
 NB. mode-0 fiber is spectral vector at (h, w)
 extract_spectral_vector=: 3 : 0
   'X h w'=. y
-  X <a:; h; w
+  (<a:; h; w) { X
 )
 
 NB. Extract spatial band (2D image slice) at spectral band b
@@ -188,7 +188,7 @@ NB. Reshape 3D hyperspectral cube (B x H x W) to 2D matrix (B x HW)
 cube_to_spectral_matrix=: 3 : 0
   X=. y
   'B H W'=. $ X
-  (B, H * W) $ X
+  (B, H * W) $ , X
 )
 
 NB. Reshape 2D spectral matrix (B x HW) back to 3D cube (B x H x W)
@@ -196,5 +196,18 @@ spectral_matrix_to_cube=: 4 : 0
   'H W'=. x
   M=. y
   B=. {. $ M
-  (B, H, W) $ M
+  (B, H, W) $ , M
 )
+
+
+albedo_tensor_tensor_order =: tensor_order
+albedo_tensor_tensor_size =: tensor_size
+albedo_tensor_tensor_fnorm =: tensor_fnorm
+albedo_tensor_tensor_unfold =: tensor_unfold
+albedo_tensor_tensor_fold =: tensor_fold
+albedo_tensor_mode_n_prod =: mode_n_prod
+albedo_tensor_khatri_rao =: khatri_rao
+albedo_tensor_kronecker =: kronecker
+albedo_tensor_vec_outer3 =: vec_outer3
+albedo_tensor_spectral_matrix_to_cube =: spectral_matrix_to_cube
+albedo_tensor_cube_to_spectral_matrix =: cube_to_spectral_matrix

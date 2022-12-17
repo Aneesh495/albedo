@@ -9,7 +9,7 @@ NB.     surrounding the guard region.
 NB. Isolates subpixel targets in heterogeneous and non-stationary clutter.
 NB. ==============================================================================
 
-cocurrent 'albedo_local_rx'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -35,7 +35,7 @@ detect_local_rx=: 4 : 0
 
   for_h. half_out + i. (H - 2 * half_out) do.
     for_w. half_out + i. (W - 2 * half_out) do.
-      center_pixel=. cube <a:; h; w
+      center_pixel=. (<a:; h; w) { cube
 
       NB. Gather outer window pixels excluding inner window
       bg_pixels=. 0 $ 0.0
@@ -44,7 +44,7 @@ detect_local_rx=: 4 : 0
           NB. Check if inside guard window
           in_guard=. ((| dh) <: half_in) *. ((| dw) <: half_in)
           if. 0 = in_guard do.
-            sample=. cube <a:; (h + dh); (w + dw)
+            sample=. (<a:; (h + dh); (w + dw)) { cube
             bg_pixels=. bg_pixels , sample
           end.
         end.
@@ -66,3 +66,6 @@ detect_local_rx=: 4 : 0
 
   score_map
 )
+
+
+albedo_local_rx_detect_local_rx =: detect_local_rx

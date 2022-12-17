@@ -5,7 +5,7 @@ NB. Provides 224-band laboratory reflectance signatures across igneous, metamorp
 NB. and sedimentary geological classes from 0.400 to 2.500 micrometers.
 NB. ==============================================================================
 
-cocurrent 'albedo_rocks'
+cocurrent 'base'
 
 NB. 224 Wavelength centers in micrometers (0.400 to 2.500 um)
 WAVELENGTHS =: 0.400 + 0.009375 * i. 224
@@ -122,3 +122,12 @@ get_rocks_by_class =: 3 : 0
   mask =. ROCK_CLASSES = y
   mask # ROCK_NAMES
 )
+
+
+albedo_rocks_ROCK_NAMES =: ROCK_NAMES
+albedo_rocks_WAVELENGTHS =: WAVELENGTHS
+albedo_rocks_ROCK_CLASSES =: ROCK_CLASSES
+albedo_rocks_ROCK_MATRIX =: ROCK_MATRIX
+albedo_rocks_get_rock_index =: get_rock_index
+albedo_rocks_get_rock_spectrum =: get_rock_spectrum
+albedo_rocks_get_rocks_by_class =: get_rocks_by_class

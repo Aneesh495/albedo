@@ -8,7 +8,7 @@ NB. and noise power.
 NB. Reference: Bioucas-Dias & Nascimento, IEEE TGRS 2008.
 NB. ==============================================================================
 
-cocurrent 'albedo_hysime'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -83,3 +83,6 @@ hysime_subspace_dim=: 3 : 0
 
   dim_k; costs; U
 )
+
+
+albedo_hysime_hysime_subspace_dim =: hysime_subspace_dim

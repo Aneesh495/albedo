@@ -15,7 +15,7 @@ NB.   - Biological Soil Crust / Lichen (fungal-algal symbiosis, dry pigments)
 NB.   - Turf Grass / Golf Fairway (uniform managed turf canopy)
 NB. ==============================================================================
 
-cocurrent 'albedo_usgs_vegetation'
+cocurrent 'base'
 
 load 'io/spectral_lib.ijs'
 
@@ -147,5 +147,8 @@ build_botanical_library=: 3 : 0
   b9=.  spec_soil_crust_lichen wvl
   b10=. spec_turf_grass wvl
 
-  |: b1 ,: b2 ,: b3 ,: b4 ,: b5 ,: b6 ,: b7 ,: b8 ,: b9 ,: b10
+  b1 ,. b2 ,. b3 ,. b4 ,. b5 ,. b6 ,. b7 ,. b8 ,. b9 ,. b10
 )
+
+
+albedo_usgs_vegetation_build_botanical_library =: build_botanical_library

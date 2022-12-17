@@ -26,11 +26,11 @@ A_true=: 1.0 (<1 1)} A_true
 NB. Pixel 2 is pure endmember 2: [0, 0, 1]
 A_true=: 1.0 (<2 2)} A_true
 NB. Other pixels are random convex combinations
-for_col. 3 + i. 47 do.
-  w=. ? 3 $ 100
-  w_norm=. w % (+/ w)
-  A_true=. w_norm (<a:; col)} A_true
-end.
+w_rest =: ? 47 3 $ 100
+w_rest =: w_rest % (+/"1 w_rest)
+A_rest =: |: w_rest
+A_pure =: =/ ~ i. 3
+A_true =: A_pure ,. A_rest
 
 X_scene=: M_true albedo_linalg_matmul A_true
 
@@ -62,7 +62,7 @@ s_fcls=: M_true albedo_fcls_solve_fcls (0 {"1 X_scene)
 'FCLS satisfies sum-to-one (ASC)' assert_near (+/ s_fcls); 1.0; 1e_5
 
 NB. Test 6: Batch FCLS Cube Unmixing
-CubeSynthetic=: 5 4 4 $ X_scene
+CubeSynthetic=: 5 4 4 $ , 16 {."1 X_scene
 Abundances=: M_true albedo_fcls_unmix_cube CubeSynthetic
 'Abundance cube shape is 3 4 4' assert_shape Abundances; 3 4 4
 'All pixel abundance fractions sum to 1.0' assert_near (+/ Abundances); (4 4 $ 1.0); 1e_4

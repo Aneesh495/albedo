@@ -5,7 +5,7 @@ NB. Implements Case-1 (open ocean) and Case-2 (turbid/coastal/estuarine) water m
 NB. with pure seawater absorption, phytoplankton pigment, CDOM, and sediment scattering.
 NB. ==============================================================================
 
-cocurrent 'albedo_aquatic'
+cocurrent 'base'
 
 NB. 224 Wavelength centers in micrometers (0.400 to 2.500 um)
 WAVELENGTHS =: 0.400 + 0.009375 * i. 224
@@ -97,3 +97,10 @@ humic_lake =: forward_water_reflectance 1.0 0.50 0.002
 NB. Shape: 4 rows by 224 columns
 AQUATIC_MATRIX =: > clear_ocean ; algal_bloom ; turbid_coastal ; humic_lake
 AQUATIC_NAMES  =: <;._1 ' ClearOcean' , ' AlgalBloom' , ' TurbidCoastal' , ' HumicLake'
+
+
+NB. Exported Aliases
+albedo_aquatic_AQUATIC_NAMES =: AQUATIC_NAMES
+albedo_aquatic_WAVELENGTHS =: WAVELENGTHS
+albedo_aquatic_AQUATIC_MATRIX =: AQUATIC_MATRIX
+albedo_aquatic_forward_water_reflectance =: forward_water_reflectance

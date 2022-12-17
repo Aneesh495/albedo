@@ -30,7 +30,7 @@ Y =: M_true +/ .* S_true
 assert (b, n) -: $ Y
 
 NB. Run NMF for 2 endmembers, 60 iterations
-'M_est S_est loss' =: (p ; 60) nmf_unmix_albedo_nmf_ Y
+'M_est S_est loss' =: (p ; 60) albedo_nmf_nmf_unmix Y
 
 assert (b, p) -: $ M_est
 assert (p, n) -: $ S_est

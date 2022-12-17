@@ -7,7 +7,7 @@ NB. diverse spectra and solving the Extended Linear Mixing Model (ELMM).
 NB. Reference: Thouvenin et al., IEEE TIP 2016.
 NB. ==============================================================================
 
-cocurrent 'albedo_bundles'
+cocurrent 'base'
 
 load 'unmix/fcls.ijs'
 load 'unmix/vca.ijs'
@@ -37,7 +37,7 @@ extract_bundles=: 4 : 0
       c0=. tw * tile_w
       c1=. W <. c0 + tile_w
 
-      sub_cube=. cube <a:; (r0 + i. r1 - r0); (c0 + i. c1 - c0)
+      sub_cube=. (<a:; (r0 + i. r1 - r0); (c0 + i. c1 - c0)) { cube
       sub_mat=. (B, (r1 - r0) * (c1 - c0)) $ sub_cube
 
       if. ((r1 - r0) * (c1 - c0)) >: p_tile do.
@@ -88,7 +88,7 @@ unmix_elmm_cube=: 4 : 0
 
   for_h. i. H do.
     for_w. i. W do.
-      pixel=. cube <a:; h; w
+      pixel=. (<a:; h; w) { cube
       's_pix psi_pix'=. M solve_elmm pixel
       abundances=. s_pix (<a:; h; w)} abundances
       scaling_map=. psi_pix (<h, w)} scaling_map
@@ -97,3 +97,8 @@ unmix_elmm_cube=: 4 : 0
 
   abundances; scaling_map
 )
+
+
+albedo_bundles_extract_bundles =: extract_bundles
+albedo_bundles_solve_elmm =: solve_elmm
+albedo_bundles_unmix_elmm_cube =: unmix_elmm_cube

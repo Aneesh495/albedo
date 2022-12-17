@@ -5,7 +5,7 @@ NB. Unsupervised spatial-spectral clustering of high-dimensional pixels.
 NB. Implements K-Means++ initialization and fast Euclidean centroid updates.
 NB. ==============================================================================
 
-cocurrent 'albedo_kmeans'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 load 'core/stats.ijs'
@@ -54,3 +54,6 @@ fit_kmeans=: 4 : 0
 
   labels; centroids
 )
+
+
+albedo_kmeans_fit_kmeans =: fit_kmeans

@@ -8,7 +8,7 @@ NB.   2. Spectral Information Divergence (SID - Chang, 1999):
 NB.      Kullback-Leibler symmetric divergence between normalized spectral probability vectors.
 NB. ==============================================================================
 
-cocurrent 'albedo_similarity'
+cocurrent 'base'
 
 load 'core/linalg.ijs'
 
@@ -73,3 +73,8 @@ spectral_information_divergence=: 4 : 0
   kl_qp=. +/ q * ^. (q % p)
   0.0 >. (kl_pq + kl_qp)
 )
+
+
+albedo_similarity_spectral_angle =: spectral_angle
+albedo_similarity_spectral_information_divergence =: spectral_information_divergence
+albedo_similarity_sam_cube =: sam_cube

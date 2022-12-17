@@ -7,7 +7,7 @@ NB. and executes partitioned PCA within each segment to prevent dominant
 NB. VNIR vegetation signals from obscuring diagnostic SWIR mineral absorption features.
 NB. ==============================================================================
 
-cocurrent 'albedo_segmented_pca'
+cocurrent 'base'
 
 load 'subspace/pca.ijs'
 
@@ -77,3 +77,8 @@ project_segmented_pca=: 4 : 0
   NB. Vertically concatenate projected feature blocks
   ; proj_blocks
 )
+
+
+albedo_segmented_pca_partition_bands =: partition_bands
+albedo_segmented_pca_train_segmented_pca =: train_segmented_pca
+albedo_segmented_pca_project_segmented_pca =: project_segmented_pca

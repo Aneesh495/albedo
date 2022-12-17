@@ -15,7 +15,7 @@ NB.   - Red Clay Brick Masonry (iron oxide kiln-fired clay)
 NB.   - Industrial Silica Sand Pile (high diffuse reflectance)
 NB. ==============================================================================
 
-cocurrent 'albedo_usgs_urban'
+cocurrent 'base'
 
 load 'io/spectral_lib.ijs'
 
@@ -114,5 +114,8 @@ build_urban_library=: 3 : 0
   u9=.  spec_red_brick wvl
   u10=. spec_silica_sand wvl
 
-  |: u1 ,: u2 ,: u3 ,: u4 ,: u5 ,: u6 ,: u7 ,: u8 ,: u9 ,: u10
+  u1 ,. u2 ,. u3 ,. u4 ,. u5 ,. u6 ,. u7 ,. u8 ,. u9 ,. u10
 )
+
+
+albedo_usgs_urban_build_urban_library =: build_urban_library
