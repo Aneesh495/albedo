@@ -23,14 +23,14 @@ fit_cp_als=: 4 : 0
   'I J K'=. $ X
 
   NB. Initialize factor matrices A, B, C with random values
-  A=. ? I, R $ 1000
-  B=. ? J, R $ 1000
-  C=. ? K, R $ 1000
+  A=. ? (I, R) $ 1000
+  B=. ? (J, R) $ 1000
+  C=. ? (K, R) $ 1000
 
   NB. Normalize columns
-  A=. A % ((albedo_linalg_norm2 "1 albedo_linalg_tr A) >. 1e_8)
-  B=. B % ((albedo_linalg_norm2 "1 albedo_linalg_tr B) >. 1e_8)
-  C=. C % ((albedo_linalg_norm2 "1 albedo_linalg_tr C) >. 1e_8)
+  A=. A %"1 ((albedo_linalg_norm2 "1 albedo_linalg_tr A) >. 1e_8)
+  B=. B %"1 ((albedo_linalg_norm2 "1 albedo_linalg_tr B) >. 1e_8)
+  C=. C %"1 ((albedo_linalg_norm2 "1 albedo_linalg_tr C) >. 1e_8)
 
   X0=. 0 albedo_tensor_tensor_unfold X
   X1=. 1 albedo_tensor_tensor_unfold X
@@ -52,7 +52,7 @@ fit_cp_als=: 4 : 0
     NB. Normalize columns of A
     col_norms_A=. albedo_linalg_norm2 "1 albedo_linalg_tr A_raw
     col_norms_A=. col_norms_A >. 1e_12
-    A=. A_raw % col_norms_A
+    A=. A_raw %"1 col_norms_A
 
     NB. --- Update B ---
     AtA=. (albedo_linalg_tr A) albedo_linalg_matmul A
@@ -62,7 +62,7 @@ fit_cp_als=: 4 : 0
     B_raw=. (X1 albedo_linalg_matmul KR_CA) albedo_linalg_matmul inv_VB
     col_norms_B=. albedo_linalg_norm2 "1 albedo_linalg_tr B_raw
     col_norms_B=. col_norms_B >. 1e_12
-    B=. B_raw % col_norms_B
+    B=. B_raw %"1 col_norms_B
 
     NB. --- Update C ---
     V_C=. BtB * AtA
@@ -71,7 +71,7 @@ fit_cp_als=: 4 : 0
     C_raw=. (X2 albedo_linalg_matmul KR_BA) albedo_linalg_matmul inv_VC
     col_norms_C=. albedo_linalg_norm2 "1 albedo_linalg_tr C_raw
     col_norms_C=. col_norms_C >. 1e_12
-    C=. C_raw % col_norms_C
+    C=. C_raw %"1 col_norms_C
 
     NB. Component weights lambda = col_norms_C
     lambda_weights=. col_norms_C

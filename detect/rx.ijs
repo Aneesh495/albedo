@@ -22,7 +22,7 @@ detect_global_rx=: 3 : 0
   cube=. y
   'B H W'=. $ cube
   N=. H * W
-  X_mat=. (B, N) $ cube
+  X_mat=. (B, N) $ , cube
 
   NB. Background statistics across entire scene
   mu_b=. albedo_stats_mean_vector X_mat

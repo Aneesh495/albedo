@@ -211,3 +211,4 @@ albedo_tensor_kronecker =: kronecker
 albedo_tensor_vec_outer3 =: vec_outer3
 albedo_tensor_spectral_matrix_to_cube =: spectral_matrix_to_cube
 albedo_tensor_cube_to_spectral_matrix =: cube_to_spectral_matrix
+albedo_tensor_ttm =: ttm
