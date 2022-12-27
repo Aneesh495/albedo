@@ -17,12 +17,12 @@ NB. Helper to construct characteristic absorption cross-section (in 1e_21 cm^2 /
 NB. lines: list of (center_um, peak_cross_section, fwhm_um)
 calc_cross_section =: 3 : 0
   lines =. y
-  sigma =. 224 # 0.0
-  for_line. lines do.
-    'c0 amp fwhm' =. line
+  sigma =. 224 $ 0.0
+  for_idx. i. # lines do.
+    'c0 amp fwhm' =. idx { lines
     w =. (fwhm % 2) % %: 2 * ^. 2
     lorentz =. amp % 1.0 + *: (WAVELENGTHS - c0) % (fwhm % 2)
-    gauss   =. amp * ^. - 0.5 * *: (WAVELENGTHS - c0) % w
+    gauss   =. amp * ^ - 0.5 * *: (WAVELENGTHS - c0) % w
     voigt   =. 0.5 * (lorentz + gauss)
     sigma =. sigma + voigt
   end.

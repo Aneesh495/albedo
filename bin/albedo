@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""
+ALBEDO - High-Dimensional Hyperspectral Imaging & Tensor Decomposition Engine
+bin/albedo : Command-Line Interface Driver
+
+Unified CLI driver providing commands for:
+  - sim     : Generate synthetic hyperspectral scenes with mineral/gas targets
+  - unmix   : Perform endmember extraction and abundance map estimation
+  - detect  : Execute multivariate anomaly and matched target detectors
+  - denoise : Tensor Tucker3/CP-ALS decomposition and wavelet shrinkage
+  - bench   : Run microbenchmark suite measuring algorithm throughput
+  - test    : Run full automated verification suite (35 test suites)
+  - viewer  : Launch interactive WebGL hyperspectral cube visualizer
+"""
+
+import argparse
+import os
+import subprocess
+import sys
+
+def get_repo_root():
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def get_jconsole():
+    bin_path = "/Users/aneeshkrishna/.local/bin/jconsole"
+    if os.path.exists(bin_path):
+        return bin_path
+    return "jconsole"
+
+def cmd_sim(args):
+    repo_root = get_repo_root()
+    jconsole = get_jconsole()
+    print(f"[*] Simulating synthetic hyperspectral scene ({args.rows}x{args.cols}, 224 bands)...")
+    
+    j_code = f"""
+load 'albedo.ijs'
+scene =: albedo_sim_generate_scene {args.rows} {args.cols} 30.0
+cube =: 0 {{:: scene
+wvl =: 4 {{:: scene
+smoutput 'Scene successfully synthesized. Data shape: ' , ": $ cube
+smoutput 'Wavelength bands: ' , ": # wvl
+exit 0
+"""
+    proc = subprocess.run([jconsole], input=j_code, cwd=repo_root, capture_output=True, text=True)
+    if proc.returncode != 0:
+        print("[!] Error during scene simulation:\n", proc.stderr)
+        sys.exit(proc.returncode)
+    print(proc.stdout)
+    print(f"[+] Scene synthesized successfully.")
+
+def cmd_unmix(args):
+    repo_root = get_repo_root()
+    jconsole = get_jconsole()
+    print(f"[*] Running spectral unmixing (method: {args.method}, endmembers: {args.endmembers})...")
+    
+    j_code = f"""
+load 'albedo.ijs'
+scene =: albedo_sim_generate_scene 24 24 30.0
+cube =: 0 {{:: scene
+smoutput 'Extracting {args.endmembers} endmembers via {args.method.upper()}...'
+E =: {args.endmembers} albedo_{args.method}_extract_{args.method} cube
+smoutput 'Endmember matrix shape: ' , ": $ E
+smoutput 'Estimating abundance fractions via FCLS...'
+A =: (E; 50) albedo_fcls_fcls_cube cube
+smoutput 'Abundance cube shape: ' , ": $ A
+smoutput 'Unmixing completed successfully.'
+exit 0
+"""
+    proc = subprocess.run([jconsole], input=j_code, cwd=repo_root, capture_output=True, text=True)
+    if proc.returncode != 0:
+        print("[!] Error during spectral unmixing:\n", proc.stderr)
+        sys.exit(proc.returncode)
+    print(proc.stdout)
+
+def cmd_detect(args):
+    repo_root = get_repo_root()
+    jconsole = get_jconsole()
+    print(f"[*] Executing detection algorithm ({args.method})...")
+    
+    if args.method == "rx":
+        j_code = """
+load 'albedo.ijs'
+scene =: albedo_sim_generate_scene 24 24 30.0
+cube =: 0 {:: scene
+smoutput 'Running Global Reed-Xiaoli (RX) anomaly detector...'
+scores =: albedo_rx_detect_global_rx cube
+smoutput 'Anomaly score map shape: ' , ": $ scores
+smoutput 'Peak anomaly score: ' , ": >./ , scores
+exit 0
+"""
+    elif args.method == "cem":
+        j_code = """
+load 'albedo.ijs'
+scene =: albedo_sim_generate_scene 24 24 30.0
+cube =: 0 {:: scene
+wvl =: 4 {:: scene
+target =: albedo_spectral_lib_ref_kaolinite_soil wvl
+smoutput 'Running Constrained Energy Minimization (CEM)...'
+scores =: target albedo_target_detect_detect_cem cube
+smoutput 'CEM detection score shape: ' , ": $ scores
+smoutput 'Peak target response: ' , ": >./ , scores
+exit 0
+"""
+    else:
+        j_code = """
+load 'albedo.ijs'
+scene =: albedo_sim_generate_scene 24 24 30.0
+cube =: 0 {:: scene
+wvl =: 4 {:: scene
+target =: albedo_spectral_lib_ref_kaolinite_soil wvl
+smoutput 'Running Spectral Matched Filter (MF)...'
+scores =: target albedo_target_detect_detect_matched_filter cube
+smoutput 'MF score map shape: ' , ": $ scores
+smoutput 'Peak response: ' , ": >./ , scores
+exit 0
+"""
+    proc = subprocess.run([jconsole], input=j_code, cwd=repo_root, capture_output=True, text=True)
+    if proc.returncode != 0:
+        print("[!] Error during target detection:\n", proc.stderr)
+        sys.exit(proc.returncode)
+    print(proc.stdout)
+
+def cmd_bench(args):
+    repo_root = get_repo_root()
+    bench_py = os.path.join(repo_root, "scripts", "run_benchmarks.py")
+    subprocess.run([sys.executable, bench_py], cwd=repo_root)
+
+def cmd_test(args):
+    repo_root = get_repo_root()
+    test_py = os.path.join(repo_root, "scripts", "run_tests.py")
+    subprocess.run([sys.executable, test_py], cwd=repo_root)
+
+def cmd_viewer(args):
+    repo_root = get_repo_root()
+    server_py = os.path.join(repo_root, "viewer", "server.py")
+    print(f"[*] Starting Albedo WebGL Dashboard on port {args.port}...")
+    subprocess.run([sys.executable, server_py, "--port", str(args.port)], cwd=repo_root)
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="albedo",
+        description="ALBEDO: Hyperspectral Imaging & Multi-Way Tensor Engine CLI"
+    )
+    subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
+
+    # sim
+    p_sim = subparsers.add_parser("sim", help="Simulate a synthetic hyperspectral scene")
+    p_sim.add_argument("--rows", type=int, default=32, help="Number of spatial rows")
+    p_sim.add_argument("--cols", type=int, default=32, help="Number of spatial columns")
+    p_sim.set_defaults(func=cmd_sim)
+
+    # unmix
+    p_unmix = subparsers.add_parser("unmix", help="Perform spectral unmixing on data cube")
+    p_unmix.add_argument("--endmembers", type=int, default=4, help="Number of pure endmembers")
+    p_unmix.add_argument("--method", choices=["vca", "nfindr", "ppi"], default="vca", help="Extraction method")
+    p_unmix.set_defaults(func=cmd_unmix)
+
+    # detect
+    p_detect = subparsers.add_parser("detect", help="Execute anomaly or target detection")
+    p_detect.add_argument("--method", choices=["rx", "cem", "mf"], default="rx", help="Detector method")
+    p_detect.set_defaults(func=cmd_detect)
+
+    # bench
+    p_bench = subparsers.add_parser("bench", help="Run throughput microbenchmarks")
+    p_bench.set_defaults(func=cmd_bench)
+
+    # test
+    p_test = subparsers.add_parser("test", help="Run automated test suite (35 suites)")
+    p_test.set_defaults(func=cmd_test)
+
+    # viewer
+    p_view = subparsers.add_parser("viewer", help="Launch WebGL dashboard server")
+    p_view.add_argument("--port", type=int, default=8000, help="HTTP server port")
+    p_view.set_defaults(func=cmd_viewer)
+
+    args = parser.parse_args()
+    if not args.command:
+        parser.print_help()
+        sys.exit(0)
+    args.func(args)
+
+if __name__ == "__main__":
+    main()

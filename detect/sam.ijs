@@ -36,7 +36,7 @@ sam_cube=: 4 : 0
   t=. x
   cube=. y
   'B H W'=. $ cube
-  X_mat=. (B, H * W) $ cube
+  X_mat=. (B, H * W) $ , cube
 
   norm_t=. albedo_linalg_norm2 t
   dot_prods=. t albedo_linalg_matmul X_mat
@@ -45,7 +45,7 @@ sam_cube=: 4 : 0
 
   cos_thetas=. _1.0 >. 1.0 <. (dot_prods % denom)
   angles_1d=. _2&o. cos_thetas
-  (H, W) $ angles_1d
+  (H, W) $ , angles_1d
 )
 
 NB. ------------------------------------------------------------------------------

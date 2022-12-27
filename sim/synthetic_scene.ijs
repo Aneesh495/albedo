@@ -76,11 +76,11 @@ generate_scene=: 3 : 0
   end.
 
   NB. Endmember matrix M of shape (B, 5)
-  M=. |: sig_veg ,: sig_water ,: sig_soil ,: sig_calcite ,: sig_asphalt
+  M=. sig_veg ,. sig_water ,. sig_soil ,. sig_calcite ,. sig_asphalt
 
   NB. Linear spectral mixing: Reflectance = M * A_gt
-  Refl_mat=. M albedo_linalg_matmul ((5, H * W) $ A_gt)
-  Refl_cube=. (B, H, W) $ Refl_mat
+  Refl_mat=. M albedo_linalg_matmul ((5, H * W) $ , A_gt)
+  Refl_cube=. (B, H, W) $ , Refl_mat
 
   NB. Inject subpixel methane plume at (h=H/2, w=W/4) with 2x2 dispersion
   plume_h=. <. 0.5 * H
@@ -121,3 +121,4 @@ generate_scene=: 3 : 0
 
 
 albedo_sim_generate_scene =: generate_scene
+albedo_sim_generate_synthetic_scene =: generate_scene

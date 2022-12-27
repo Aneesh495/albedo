@@ -41,7 +41,7 @@ detect_cem=: 4 : 0
   d=. x
   cube=. y
   'B H W'=. $ cube
-  X_mat=. (B, H * W) $ cube
+  X_mat=. (B, H * W) $ , cube
 
   NB. Sample correlation matrix R = (1/N) * X X^T
   R=. (X_mat albedo_linalg_matmul (albedo_linalg_tr X_mat)) % (H * W)
@@ -49,7 +49,7 @@ detect_cem=: 4 : 0
 
   NB. Filter all pixels: y = w^T X
   scores_1d=. w_cem albedo_linalg_matmul X_mat
-  (H, W) $ scores_1d
+  (H, W) $ , scores_1d
 )
 
 NB. ------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ detect_matched_filter=: 4 : 0
   d=. x
   cube=. y
   'B H W'=. $ cube
-  X_mat=. (B, H * W) $ cube
+  X_mat=. (B, H * W) $ , cube
 
   mu=. albedo_stats_mean_vector X_mat
   Sigma=. albedo_stats_covariance_matrix X_mat
@@ -78,7 +78,7 @@ detect_matched_filter=: 4 : 0
 
   Xc=. X_mat - mu
   scores_1d=. w_mf albedo_linalg_matmul Xc
-  (H, W) $ scores_1d
+  (H, W) $ , scores_1d
 )
 
 NB. ------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ detect_ace=: 4 : 0
   d=. x
   cube=. y
   'B H W'=. $ cube
-  X_mat=. (B, H * W) $ cube
+  X_mat=. (B, H * W) $ , cube
 
   mu=. albedo_stats_mean_vector X_mat
   Sigma=. albedo_stats_covariance_matrix X_mat
@@ -114,7 +114,7 @@ detect_ace=: 4 : 0
   denom_tot=. denom_d * (mahal_x >. 1e_12)
 
   ace_scores=. 0.0 >. 1.0 <. (num % denom_tot)
-  (H, W) $ ace_scores
+  (H, W) $ , ace_scores
 )
 
 

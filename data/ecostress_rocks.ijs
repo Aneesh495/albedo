@@ -18,12 +18,13 @@ ROCK_CLASSES =: (10 # 0) , (10 # 1) , (10 # 2)
 
 NB. Helper to construct characteristic reflectance curve with diagnostic absorption features:
 NB. r0: base reflectance, slope: spectral tilt, dips: list of (center_um, depth, width_um)
-calc_curve =: 3 : 0
-  'r0 slope dips' =. y
+calc_curve =: 4 : 0
+  'r0 slope' =. x
+  dips =. y
   base =. r0 + slope * (WAVELENGTHS - 0.400)
-  for_d. dips do.
-    'c0 depth w0' =. d
-    gauss =. depth * ^. - 0.5 * *: (WAVELENGTHS - c0) % w0
+  for_idx. i. # dips do.
+    'c0 depth w0' =. idx { dips
+    gauss =. depth * ^ - 0.5 * *: (WAVELENGTHS - c0) % w0
     base =. base - gauss
   end.
   0.01 >. 0.95 <. base
@@ -65,38 +66,38 @@ graywacke_dips   =: 2 3 $ 1.050 0.08 0.120  2.330 0.08 0.035
 chalk_dips       =: 3 3 $ 1.875 0.08 0.030  2.335 0.40 0.035  2.500 0.20 0.040
 tuff_dips        =: 3 3 $ 1.410 0.08 0.030  1.910 0.13 0.035  2.210 0.10 0.025
 
-granite      =: calc_curve 0.35 0.18 granite_dips
-basalt       =: calc_curve 0.12 0.08 basalt_dips
-rhyolite     =: calc_curve 0.40 0.20 rhyolite_dips
-gabbro       =: calc_curve 0.14 0.09 gabbro_dips
-diorite      =: calc_curve 0.22 0.12 diorite_dips
-peridotite   =: calc_curve 0.10 0.06 peridotite_dips
-obsidian     =: calc_curve 0.06 0.04 obsidian_dips
-pumice       =: calc_curve 0.50 0.15 pumice_dips
-andesite     =: calc_curve 0.18 0.10 andesite_dips
-dunite       =: calc_curve 0.15 0.08 dunite_dips
+granite      =: 0.35 0.18 calc_curve granite_dips
+basalt       =: 0.12 0.08 calc_curve basalt_dips
+rhyolite     =: 0.40 0.20 calc_curve rhyolite_dips
+gabbro       =: 0.14 0.09 calc_curve gabbro_dips
+diorite      =: 0.22 0.12 calc_curve diorite_dips
+peridotite   =: 0.10 0.06 calc_curve peridotite_dips
+obsidian     =: 0.06 0.04 calc_curve obsidian_dips
+pumice       =: 0.50 0.15 calc_curve pumice_dips
+andesite     =: 0.18 0.10 calc_curve andesite_dips
+dunite       =: 0.15 0.08 calc_curve dunite_dips
 
-marble       =: calc_curve 0.55 0.12 marble_dips
-quartzite    =: calc_curve 0.60 0.15 quartzite_dips
-schist       =: calc_curve 0.24 0.12 schist_dips
-gneiss       =: calc_curve 0.28 0.14 gneiss_dips
-slate        =: calc_curve 0.16 0.08 slate_dips
-phyllite     =: calc_curve 0.20 0.10 phyllite_dips
-serpentinite =: calc_curve 0.18 0.07 serpentinite_dips
-amphibolite  =: calc_curve 0.15 0.09 amphibolite_dips
-granulite    =: calc_curve 0.30 0.13 granulite_dips
-eclogite     =: calc_curve 0.16 0.08 eclogite_dips
+marble       =: 0.55 0.12 calc_curve marble_dips
+quartzite    =: 0.60 0.15 calc_curve quartzite_dips
+schist       =: 0.24 0.12 calc_curve schist_dips
+gneiss       =: 0.28 0.14 calc_curve gneiss_dips
+slate        =: 0.16 0.08 calc_curve slate_dips
+phyllite     =: 0.20 0.10 calc_curve phyllite_dips
+serpentinite =: 0.18 0.07 calc_curve serpentinite_dips
+amphibolite  =: 0.15 0.09 calc_curve amphibolite_dips
+granulite    =: 0.30 0.13 calc_curve granulite_dips
+eclogite     =: 0.16 0.08 calc_curve eclogite_dips
 
-limestone    =: calc_curve 0.42 0.16 limestone_dips
-dolomite     =: calc_curve 0.44 0.16 dolomite_dips
-sandstone    =: calc_curve 0.38 0.20 sandstone_dips
-shale        =: calc_curve 0.22 0.14 shale_dips
-siltstone    =: calc_curve 0.26 0.15 siltstone_dips
-chert        =: calc_curve 0.50 0.12 chert_dips
-arkose       =: calc_curve 0.36 0.18 arkose_dips
-graywacke    =: calc_curve 0.18 0.10 graywacke_dips
-chalk        =: calc_curve 0.65 0.10 chalk_dips
-tuff         =: calc_curve 0.38 0.16 tuff_dips
+limestone    =: 0.42 0.16 calc_curve limestone_dips
+dolomite     =: 0.44 0.16 calc_curve dolomite_dips
+sandstone    =: 0.38 0.20 calc_curve sandstone_dips
+shale        =: 0.22 0.14 calc_curve shale_dips
+siltstone    =: 0.26 0.15 calc_curve siltstone_dips
+chert        =: 0.50 0.12 calc_curve chert_dips
+arkose       =: 0.36 0.18 calc_curve arkose_dips
+graywacke    =: 0.18 0.10 calc_curve graywacke_dips
+chalk        =: 0.65 0.10 calc_curve chalk_dips
+tuff         =: 0.38 0.16 calc_curve tuff_dips
 
 NB. Shape: 30 rows by 224 columns
 ROCK_MATRIX =: > granite ; basalt ; rhyolite ; gabbro ; diorite ; peridotite ; obsidian ; pumice ; andesite ; dunite ; marble ; quartzite ; schist ; gneiss ; slate ; phyllite ; serpentinite ; amphibolite ; granulite ; eclogite ; limestone ; dolomite ; sandstone ; shale ; siltstone ; chert ; arkose ; graywacke ; chalk ; tuff

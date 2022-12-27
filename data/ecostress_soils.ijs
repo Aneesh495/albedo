@@ -23,14 +23,14 @@ calc_soil =: 3 : 0
   base =. r0 + (slope * w) - (0.05 * w * w)
   base =. base * om_damp
   NB. Iron oxide broad crystal field absorption at 0.880 um
-  fe_abs =. fe_depth * ^. - 0.5 * *: (WAVELENGTHS - 0.880) % 0.120
+  fe_abs =. fe_depth * ^ - 0.5 * *: (WAVELENGTHS - 0.880) % 0.120
   NB. Clay lattice Al-OH vibrational overtone at 2.206 um
-  clay_abs =. clay_depth * ^. - 0.5 * *: (WAVELENGTHS - 2.206) % 0.030
+  clay_abs =. clay_depth * ^ - 0.5 * *: (WAVELENGTHS - 2.206) % 0.030
   NB. Structural water at 1.415 um and 1.915 um
-  w14 =. 0.08 * ^. - 0.5 * *: (WAVELENGTHS - 1.415) % 0.035
-  w19 =. 0.12 * ^. - 0.5 * *: (WAVELENGTHS - 1.915) % 0.040
+  w14 =. 0.08 * ^ - 0.5 * *: (WAVELENGTHS - 1.415) % 0.035
+  w19 =. 0.12 * ^ - 0.5 * *: (WAVELENGTHS - 1.915) % 0.040
   NB. Combine and constrain to realistic soil reflectance bounds [0.02, 0.85]
-  spec =. base - fe_abs - clay_abs - w14 - w19
+  spec =. base - (fe_abs + clay_abs + w14 + w19)
   0.02 >. 0.85 <. spec
 )
 

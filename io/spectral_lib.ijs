@@ -154,4 +154,6 @@ albedo_spectral_lib_resample_spectrum =: resample_spectrum
 albedo_spectral_lib_ref_green_vegetation =: ref_green_vegetation
 albedo_spectral_lib_ref_clear_water =: ref_clear_water
 albedo_spectral_lib_ref_kaolinite_soil =: ref_kaolinite_soil
+albedo_spectral_lib_ref_calcite_mineral =: ref_calcite_mineral
+albedo_spectral_lib_ref_urban_asphalt =: ref_urban_asphalt
 albedo_spectral_lib_ref_methane_plume =: ref_methane_plume

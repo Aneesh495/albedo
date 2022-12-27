@@ -19,7 +19,7 @@ calc_aw =: 3 : 0
   vis_aw =. 0.005 + 0.03 * *: (w - 0.420) % 0.150
   NB. NIR steps: 0.750 um (2.5 m^-1), 0.970 um (35 m^-1)
   nir_step =. 2.5 % 1.0 + ^ - (w - 0.720) % 0.030
-  nir_peak =. 35.0 * ^. - 0.5 * *: (w - 0.970) % 0.050
+  nir_peak =. 35.0 * ^ - 0.5 * *: (w - 0.970) % 0.050
   NB. SWIR regime: heavy absorption > 1.2 um (100 to 10000 m^-1)
   swir_step =. 250.0 % 1.0 + ^ - (w - 1.150) % 0.080
   swir_huge =. 1200.0 % 1.0 + ^ - (w - 1.400) % 0.100
@@ -35,8 +35,8 @@ NB. Phytoplankton specific absorption a_star_ph (m^2 / mg Chl-a):
 NB. Diagnostic blue peak at 0.440 um, red peak at 0.675 um, fluorescence at 0.685 um
 calc_aph =: 3 : 0
   w =. WAVELENGTHS
-  blue_peak =. 0.045 * ^. - 0.5 * *: (w - 0.440) % 0.035
-  red_peak  =. 0.025 * ^. - 0.5 * *: (w - 0.675) % 0.020
+  blue_peak =. 0.045 * ^ - 0.5 * *: (w - 0.440) % 0.035
+  red_peak  =. 0.025 * ^ - 0.5 * *: (w - 0.675) % 0.020
   blue_peak + red_peak
 )
 
