@@ -1,0 +1,43 @@
+name: ALBEDO CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    name: Verify Numerics and Style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install J Console (J9.6)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget curl
+          wget https://www.jsoftware.com/download/j9.6/install/j9.6_linux64.tar.gz
+          tar -xzf j9.6_linux64.tar.gz
+          sudo mv j9.6 /opt/j9.6
+          sudo ln -s /opt/j9.6/bin/jconsole /usr/local/bin/jconsole
+          which jconsole
+          jconsole -version || true
+
+      - name: Typography and Style Validation
+        run: python3 scripts/verify_no_em_dash.py
+
+      - name: Automated Verification Suite (35 Suites)
+        run: python3 scripts/run_tests.py
+
+      - name: Microbenchmark Performance Audit
+        run: python3 scripts/run_benchmarks.py
+
+      - name: Lines of Code Audit
+        run: python3 scripts/check_loc.py
