@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Parthasarathy"
+    given-names: "Aneesh Krishna"
+title: "ALBEDO: Hyperspectral Imaging, Spectral Spectroscopy, and Multi-Way Tensor Engine"
+version: 1.0.0
+date-released: 2026-11-22
+url: "https://github.com/aneesh495/albedo"
+keywords:
+  - "hyperspectral-imaging"
+  - "spectral-unmixing"
+  - "earth-observation"
+  - "tensor-decomposition"
+  - "atmospheric-correction"
