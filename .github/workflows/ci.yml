@@ -22,11 +22,11 @@ jobs:
       - name: Install J Console (J9.6)
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget curl execstack
+          sudo apt-get install -y wget curl patchelf
           wget https://www.jsoftware.com/download/j9.6/install/j9.6_linux64.tar.gz
           tar -xzf j9.6_linux64.tar.gz
           sudo mv j9.6 /opt/j9.6
-          sudo execstack -c /opt/j9.6/bin/libj.so
+          sudo patchelf --clear-execstack /opt/j9.6/bin/libj.so
           sudo ln -s /opt/j9.6/bin/jconsole /usr/local/bin/jconsole
           which jconsole
           jconsole -version || true
